@@ -4,3 +4,6 @@ DELETE * FROM STUDENTS [42001-232]
 2024-12-01 17:23:03.663681-05:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]DELETESTUDENTS  FROM STUDENTS"; expected "DELETE, DROP"; SQL statement:
 DELETESTUDENTS  FROM STUDENTS [42001-232]
+2025-02-04 17:54:52.706861-05:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * [*]form students"; SQL statement:
+select * form students [42000-232]

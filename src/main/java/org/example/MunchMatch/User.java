@@ -1,11 +1,11 @@
-package org.example.advjavaproject;
+package org.example.MunchMatch;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="students")
+@Table(name="users")
 
-public class Student {
+public class User {
 
     @Id
     @GeneratedValue
@@ -16,8 +16,6 @@ public class Student {
     private String lname;
     @Column
     private String email;
-    @Column
-    private String course;
 
     public Long getId() {
         return id;
@@ -51,22 +49,15 @@ public class Student {
         this.email = email;
     }
 
-    public String getCourse() {
-        return course;
-    }
 
-    public void setCourse(String course) {
-        this.course = course;
-    }
 
     @Override
     public String toString() {
-        return "Student{" +
+        return "User{" +
                 "id=" + id + '\'' +
                 "fname='" + fname + '\'' +
                 ", lname='" + lname + '\'' +
                 ", email='" + email + '\'' +
-                ", course='" + course + '\'' +
                 '}';
     }
 }

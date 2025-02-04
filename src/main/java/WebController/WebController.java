@@ -1,7 +1,7 @@
 package WebController;
 
-import org.example.advjavaproject.Student;
-import org.example.advjavaproject.StudentRepository;
+import org.example.MunchMatch.User;
+import org.example.MunchMatch.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,25 +14,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class WebController {
 
     @Autowired
-    StudentRepository repository;
+    UserRepository repository;
 
     @GetMapping("/")
     public String indexPage(Model model) {
-        model.addAttribute("studentForm", new Student());
+        model.addAttribute("userForm", new User());
         System.out.println();
         return "index";
     }
 
     @PostMapping("/success")
-    public String successPage(@ModelAttribute Student student, Model model) {
-        if (!student.getEmail().endsWith("@mail.valenciacollege.edu")) {
-            return "error";
-        }
-        else {
-            model.addAttribute("studentForm", student);
-            repository.save(student);
+    public String successPage(@ModelAttribute User user, Model model) {
+            repository.save(user);
             return "success";
-        }
 
     }
 
