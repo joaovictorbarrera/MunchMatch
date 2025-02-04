@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Java Project</title>
+</head>
+<body>
+<h1>Please fill out this form to sign in to the lab:</h1>
+<form th:action="success" th:object="${studentForm}" th:method="post">
+  <label for="fname">First name:</label>
+  <input type="text" th:field="*{fname}">
+  <label for="lname">Last name:</label>
+  <input type="text" th:field="*{lname}">
+  <label for="email">Email address:</label>
+  <input type="text" th:field="*{email}">
+  <label for="course">Course you need help with:</label>
+  <input type="text" th:field="*{course}">
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

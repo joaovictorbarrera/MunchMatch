@@ -1,0 +1,6 @@
+2024-12-01 17:22:42.843779-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE [*]* FROM STUDENTS"; expected "identifier"; SQL statement:
+DELETE * FROM STUDENTS [42001-232]
+2024-12-01 17:23:03.663681-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]DELETESTUDENTS  FROM STUDENTS"; expected "DELETE, DROP"; SQL statement:
+DELETESTUDENTS  FROM STUDENTS [42001-232]
