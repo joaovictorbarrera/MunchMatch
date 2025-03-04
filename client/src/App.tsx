@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import './App.css'
 import { defaultQuestionnaire, Questionnaire, QuestionnaireContext } from './contexts/QuestionnaireContext';
-import DishPage, { Meal } from './components/HomeSteps/MealSelectionStep';
+import { Meal } from './components/HomeSteps/MealSelectionStep';
 import NavBar from './components/NavBar';
-import QuestionnaireStep from './components/HomeSteps/QuestionnaireStep';
-import ResultStep from './components/HomeSteps/ResultStep';
 import { AcceptedMealContext } from './contexts/AcceptedMealContext';
+import Home from './components/HomeSteps/Home';
+import About from './components/ExtraPages/About';
+import Contact from './components/ExtraPages/Contact';
 
 
 function App() {
@@ -19,27 +20,21 @@ function App() {
 function Window() {
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>(defaultQuestionnaire);
   const [acceptedMeals, setAcceptedMeals] = useState<Meal[]>([]);
-  const [page, setPage] = useState<number>(1)
 
-  function handleNextPage() {
-    setPage(state => {
-      if (state == 3) return state
-      return state + 1
-    })
-  }
+  const [page, setPage] = useState<number>(1)
 
   const pageComponents = new Map(
     [
-        [1, <QuestionnaireStep handleNextPage={handleNextPage} />],
-        [2, <DishPage handleNextPage={handleNextPage} />],
-        [3, <ResultStep />]
+        [1, <Home />],
+        [2, <About />],
+        [3, <Contact />]
     ]
   )
-
+  
   return (
   <div className='bg-mm-bg w-full flex justify-center'>
     <div className='w-[1200px] flex-col text-black'>
-      <NavBar />
+      <NavBar page={page} setPage={setPage} />
       <main className='text-xl flex pt-5'>
         <QuestionnaireContext.Provider value={{questionnaire, setQuestionnaire}}>
           <AcceptedMealContext.Provider value={{acceptedMeals, setAcceptedMeals}}>
