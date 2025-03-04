@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@theme {
+    --color-mm-bg: #E8E1D9;
+    --color-mm-text: #125C13;
+    --color-mm-primary: #EDC99C;
+}
+
+.selected {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+}

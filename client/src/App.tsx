@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import './App.css'
-import QuestionnairePage from './components/QuestionnairePage'
 import { defaultQuestionnaire, Questionnaire, QuestionnaireContext } from './contexts/QuestionnaireContext';
-import DishPage from './components/DishPage';
-import ResultPage from './components/ResultPage';
+import DishPage, { Meal } from './components/HomeSteps/MealSelectionStep';
+import NavBar from './components/NavBar';
+import QuestionnaireStep from './components/HomeSteps/QuestionnaireStep';
+import ResultStep from './components/HomeSteps/ResultStep';
+import { AcceptedMealContext } from './contexts/AcceptedMealContext';
 
 
 function App() {
@@ -16,6 +18,7 @@ function App() {
 
 function Window() {
   const [questionnaire, setQuestionnaire] = useState<Questionnaire>(defaultQuestionnaire);
+  const [acceptedMeals, setAcceptedMeals] = useState<Meal[]>([]);
   const [page, setPage] = useState<number>(1)
 
   function handleNextPage() {
@@ -27,25 +30,24 @@ function Window() {
 
   const pageComponents = new Map(
     [
-        [1, <QuestionnairePage handleNextPage={handleNextPage} />],
+        [1, <QuestionnaireStep handleNextPage={handleNextPage} />],
         [2, <DishPage handleNextPage={handleNextPage} />],
-        [3, <ResultPage />]
+        [3, <ResultStep />]
     ]
   )
 
   return (
-  <div className='w-[1000px] bg-gray-100 flex-col text-black'>
-    <header className='flex'>
-      <a className='pt-5 flex items-center gap-1' href='/'>
-        <img className="h-9" src="/swipe.png" alt="" />
-        <h1 className='text-4xl inline'>MunchMatch</h1>
-      </a>
-    </header>
-    <main className='text-xl flex pt-5'>
-      <QuestionnaireContext.Provider value={{questionnaire, setQuestionnaire}}>
-        {pageComponents.get(page)}
-      </QuestionnaireContext.Provider>
-    </main>
+  <div className='bg-mm-bg w-full flex justify-center'>
+    <div className='w-[1200px] flex-col text-black'>
+      <NavBar />
+      <main className='text-xl flex pt-5'>
+        <QuestionnaireContext.Provider value={{questionnaire, setQuestionnaire}}>
+          <AcceptedMealContext.Provider value={{acceptedMeals, setAcceptedMeals}}>
+            {pageComponents.get(page)}
+          </AcceptedMealContext.Provider>
+        </QuestionnaireContext.Provider>
+      </main>
+    </div>
   </div>
 )
 }

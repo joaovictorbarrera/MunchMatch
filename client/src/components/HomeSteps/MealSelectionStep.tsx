@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { IconContext } from "react-icons";
 import { RiCheckLine, RiCloseFill } from "react-icons/ri";
-import { mockDishData } from "../mockData";
+import { QuestionnaireContext } from "../../contexts/QuestionnaireContext";
+import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 
-export interface Dish {
+export interface Meal {
     imageUrl: string,
     title: string,
     nutrition: {
@@ -12,41 +13,50 @@ export interface Dish {
         carbs: number,
         fat: number
     },
-    dishID: number
+    mealID: number
 }
 
-function DishPage({handleNextPage}: {handleNextPage: () => void}) {
+function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
+    const {questionnaire,} = useContext(QuestionnaireContext)
+
     const [currentDishIndex, setCurrentDishIndex] = useState<number>(0);
-    const [dishData, setDishData] = useState<Dish[]>([])
+    const [mealData, setMealData] = useState<Meal[]>([])
 
-    const [acceptedDishes, setAcceptedDishes] = useState<number[]>([]);
-    const [rejectedDishes, setRejecteddDishes] = useState<number[]>([]);
+    const {acceptedMeals, setAcceptedMeals} = useContext(AcceptedMealContext)
+    const [rejectedMeals, setRejectedMeals] = useState<number[]>([]);
 
-    function fetchDishData() {
-        setDishData(mockDishData)
+    function fetchmealData() {
         // TODO
+        fetch(`${import.meta.env.VITE_API_URL}/suggestions`, {
+            method: 'post',
+            body: JSON.stringify({questionnaire, rejectedMeals})
+        })
+        .then(res => res.json())
+        .then(data => {
+            setMealData(data)
+        })
     }
 
     useEffect(() => {
-        fetchDishData()
+        fetchmealData()
     }, [])
 
     function nextDish() {
         setCurrentDishIndex(n => {
             // TODO
-            if (n + 1 == dishData.length) return 0 // temporary
+            if (n + 1 == mealData.length) return 0 // temporary
             return n + 1
         })
     }
 
     function handleReject() {
         nextDish()
-        setRejecteddDishes(arr => [...arr, dishData[currentDishIndex].dishID])
+        setRejectedMeals(arr => [...arr, mealData[currentDishIndex].mealID])
     }
 
     function handleÁccept() {
         nextDish()
-        setAcceptedDishes(arr => [...arr, dishData[currentDishIndex].dishID])
+        setAcceptedMeals(arr => [...arr, mealData[currentDishIndex]])
     }
 
     function handleGetResults() {
@@ -54,14 +64,14 @@ function DishPage({handleNextPage}: {handleNextPage: () => void}) {
         handleNextPage()
     }
 
-    if (currentDishIndex >= dishData.length) return null
+    if (currentDishIndex >= mealData.length) return null
 
     return (
         <div className="border-2 border-gray-300 relative flex flex-col">
-            <DishCard
-                dishData={dishData}
+            <MealCard
+                mealData={mealData}
                 currentDishIndex={currentDishIndex}
-                acceptedDishes={acceptedDishes}
+                acceptedMeals={acceptedMeals}
                 handleGetResults={handleGetResults}
             />
 
@@ -81,31 +91,31 @@ function DishPage({handleNextPage}: {handleNextPage: () => void}) {
     )
 }
 
-interface DishCardProps {
-    dishData: Dish[],
+interface MealCardProps {
+    mealData: Meal[],
     currentDishIndex: number,
-    acceptedDishes: number[],
+    acceptedMeals: Meal[],
     handleGetResults: () => void
 }
 
-function DishCard({dishData, currentDishIndex, acceptedDishes, handleGetResults}: DishCardProps) {
+function MealCard({mealData, currentDishIndex, acceptedMeals, handleGetResults}: MealCardProps) {
     return (
         <div className="flex opacity-100 transition-all">
-            <img className="bg-black w-[50%] aspect-square object-cover" src={dishData[currentDishIndex].imageUrl} alt="" />
+            <img className="bg-black w-[50%] aspect-square object-cover" src={mealData[currentDishIndex].imageUrl} alt="" />
             <header className="p-5 flex flex-col gap-3 flex-1">
-                <h1 className="font-semibold text-3xl">{dishData[currentDishIndex].title}</h1>
-                <p>{dishData[currentDishIndex].nutrition.calories} calories</p>
+                <h1 className="font-semibold text-3xl">{mealData[currentDishIndex].title}</h1>
+                <p>{mealData[currentDishIndex].nutrition.calories} calories</p>
                 <hr />
                 <div>
                     <h2 className="font-bold">Nutrition</h2>
-                    <p>Protein: {dishData[currentDishIndex].nutrition.protein}g</p>
-                    <p>Carbs: {dishData[currentDishIndex].nutrition.carbs}g</p>
-                    <p>Fat: {dishData[currentDishIndex].nutrition.fat}g</p>
+                    <p>Protein: {mealData[currentDishIndex].nutrition.protein}g</p>
+                    <p>Carbs: {mealData[currentDishIndex].nutrition.carbs}g</p>
+                    <p>Fat: {mealData[currentDishIndex].nutrition.fat}g</p>
                 </div>
                 <div className="">
                     <h2>Accept dishes to get results</h2>
-                    <button onClick={handleGetResults} disabled={acceptedDishes.length < 20} className=" disabled:cursor-auto cursor-pointer disabled:bg-gray-300 bg-green-600 disabled:brightness-100 hover:brightness-90 text-white py-2 px-4 rounded">
-                        Get Results [{acceptedDishes.length} / 20]
+                    <button onClick={handleGetResults} disabled={acceptedMeals.length < 20} className=" disabled:cursor-auto cursor-pointer disabled:bg-gray-300 bg-green-600 disabled:brightness-100 hover:brightness-90 text-white py-2 px-4 rounded">
+                        Get Results [{acceptedMeals.length} / 20]
                     </button>
 
                 </div>
@@ -114,4 +124,4 @@ function DishCard({dishData, currentDishIndex, acceptedDishes, handleGetResults}
     )
 }
 
-export default DishPage
+export default MealSelectionStep
