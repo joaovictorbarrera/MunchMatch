@@ -33,6 +33,16 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
         })
         .then(res => res.json())
         .then(data => {
+            console.log(data)
+            // data = data.map((meal: any) => {
+            //     let formattedMeal: Meal = {imageUrl: meal.imageUrl, title: meal.mealName, nutrition: {
+            //         calories: meal.calories,
+            //         protein: meal.protein,
+            //         carbs: meal.carbs,
+            //         fat: meal.fat
+            //     }, mealID: meal.idMeal}
+            //     return formattedMeal
+            // })
             setMealData(data)
         })
     }
