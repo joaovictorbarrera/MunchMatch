@@ -8,6 +8,7 @@ import Confirmation from "../Questionnaire/Confirmation";
 
 function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
     const [step, setStep] = useState<number>(0);
+    const MAX_STEPS = 4
 
     function handleBack() {
         setStep(step => {
@@ -18,7 +19,7 @@ function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
 
     function handleNext() {
         setStep(step => {
-            if (step == 4) return step
+            if (step == MAX_STEPS) return step
             return step + 1
         })
     }
@@ -32,7 +33,7 @@ function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
     ])
 
     return (
-        <div className="w-full p-5 py-10 border-y-2 flex flex-col gap-30 border-mm-text">
+        <div className="w-full p-5 py-10 border-b-2 flex flex-col gap-30 border-mm-text">
             <div className="h-[300px] flex items-center justify-center">
                 {stepComponents.get(step)}
             </div>
@@ -40,8 +41,8 @@ function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
             <div className="flex flex-col items-center gap-10">
                 <Navigation step={step} handleBack={handleBack} handleNext={handleNext} handleNextPage={handleNextPage} />
                 <div className="flex w-full border-y-2 border-gray-300 border-dashed">
-                    <hr className="border-t-2 border-mm-text" style={{width:`${step*25}%`}} />
-                    <hr className="border-t-2 w-${3*(4-step)}/12 border-mm-primary" style={{width:`${(4-step)*25}%`}}/>
+                    <hr className="border-t-3 border-mm-text" style={{width:`${step*(100.0/MAX_STEPS)}%`}} />
+                    <hr className="border-t-3 border-mm-secondary" style={{width:`${(MAX_STEPS-step)*(100.0/MAX_STEPS)}%`}}/>
                 </div>
             </div> : null}
         </div>
