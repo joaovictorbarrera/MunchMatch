@@ -48,8 +48,8 @@ public class WebController {
     @PostMapping("/suggestions")
     public List<Meal> createSuggestions() {
         return Arrays.asList(
-                new Meal(1L, "Salad", 123.0, "100", "100", "100","image", "jpg", true, false, true, Arrays.asList("lunch", "snack")),
-                new Meal(2L, "Pasta",  345.0,"200", "200", "200","image", "jpg", true, false, true, Arrays.asList("lunch", "dinner"))
+                new Meal(1L, "Salad", 123.0, "100", "100", "100","image", "jpg", true, false, true, "lunch"),
+                new Meal(2L, "Pasta",  345.0,"200", "200", "200","image", "jpg", true, false, true, "dinner")
         );
     }
 
@@ -58,8 +58,8 @@ public class WebController {
     public ResultResponse createResults() {
         ArrayList<MealPlan> mealPlans = new ArrayList<>();
         MealPlan m1 = new MealPlan(5L, Arrays.asList(
-                new Meal(1L, "Salad", 123.0, "100", "100", "100","image", "jpg", true, false, true, Arrays.asList("lunch", "snack")),
-                new Meal(2L, "Pasta",  345.0,"200", "200", "200","image", "jpg", true, false, true, Arrays.asList("lunch", "dinner"))
+                new Meal(1L, "Salad", 123.0, "100", "100", "100","image", "jpg", true, false, true, "lunch"),
+                new Meal(2L, "Pasta",  345.0,"200", "200", "200","image", "jpg", true, false, true, "dinner")
         ), 2L);
         mealPlans.add(m1);
         return new ResultResponse(3L, mealPlans);
@@ -71,8 +71,8 @@ public class WebController {
 
         ArrayList<MealPlan> mealPlans = new ArrayList<>();
         MealPlan m1 = new MealPlan(5L, Arrays.asList(
-                new Meal(1L, "Salad", 123.0, "100", "100", "100","image", "jpg", true, false, true, Arrays.asList("lunch", "snack")),
-                new Meal(2L, "Pasta",  345.0,"200", "200", "200","image", "jpg", true, false, true, Arrays.asList("lunch", "dinner"))
+                new Meal(1L, "Salad", 123.0, "100", "100", "100","image", "jpg", true, false, true, "lunch"),
+                new Meal(2L, "Pasta",  345.0,"200", "200", "200","image", "jpg", true, false, true, "dinner")
         ), 2L);
         mealPlans.add(m1);
         return new ResultResponse(3L, mealPlans);
