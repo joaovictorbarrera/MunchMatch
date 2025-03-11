@@ -29,13 +29,6 @@ public class WebController {
     @Autowired
     MealPlanRepository repositoryMealPlan;
 
-
-    @GetMapping("/")
-    public String indexPage(Model model) {
-        model.addAttribute("userForm", new User());
-        return "index";
-    }
-
     @PostMapping("/success")
     public String successPage(@ModelAttribute User user, Model model) {
         repository.save(user);
@@ -43,7 +36,7 @@ public class WebController {
 
     }
 
-    //http://localhost:8080/suggestions - works.
+    //http://localhost:8080/suggestions - works.    
     @PostMapping("/suggestions")
     public List<Meal> createSuggestions() {
         return Arrays.asList(
