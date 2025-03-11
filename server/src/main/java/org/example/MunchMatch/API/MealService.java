@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MealPlanService {
+public class MealService {
 
     private static final String BASE_URL = "https://api.spoonacular.com/";
 
@@ -20,11 +20,11 @@ public class MealPlanService {
 
     private final RestTemplate restTemplate;
 
-    public MealPlanService(RestTemplate restTemplate) {
+    public MealService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public List<Meal> getMeals(String title,  Double calories,Double carbs, Double fat,Double protein, String image, String imageType, Boolean vegetarian,Boolean gluten, Boolean dairy, List<String> dishTypes) {
+    public List<Meal> getMeals(String title, Double calories, Double carbs, Double fat, Double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes) {
 
 
         List<String> intolerances = new ArrayList<>();
@@ -37,8 +37,6 @@ public class MealPlanService {
                 .queryParam("maxCarbs", carbs)
                 .queryParam("maxFat", fat)
                 .queryParam("maxProtein", protein)
-                .queryParam("image", image)
-                .queryParam("imageType", imageType)
                 .queryParam("diet", vegetarian != null && vegetarian ? "vegetarian" : "")
                 .queryParam("intolerances", String.join(",", intolerances))
                 .queryParam("dishTypes", String.join(",", dishTypes))
@@ -56,4 +54,4 @@ public class MealPlanService {
 }
 
 //This works   https://api.spoonacular.com/recipes/complexSearch?query=salad&type=lunch&maxProtein=150&maxCarbs=150&maxFat=100&maxCalories=1000&diet=vegetarian&intolerances=gluten,dairy&apiKey=apikey
-//Local host is not working   http://localhost:8080/meal?title=salad&dishTypes=lunch&protein=150&carbs=150&fat=100&calories=1000.5&vegetarian=true&gluten=true&dairy=true
+//Local host is not working   http://localhost:8081/meal?title=salad&dishTypes=lunch&protein=150&carbs=150&fat=100&calories=1000.5&vegetarian=true&gluten=true&dairy=true
