@@ -4,9 +4,6 @@ import java.util.List;
 public class MealResponse {
     private List<Meal> results;
 
-    public MealResponse(List<Meal> meal) {
-    }
-
 
     public List<Meal> getResults() {
         return results;

@@ -1,9 +1,8 @@
 package WebController;
 
-import org.example.MunchMatch.Class.Meal;
-import org.example.MunchMatch.Class.MealPlan;
-import org.example.MunchMatch.Class.ResultResponse;
-import org.example.MunchMatch.Class.User;
+import org.example.MunchMatch.API.MealService;
+import org.example.MunchMatch.Class.*;
+
 import org.example.MunchMatch.Repository.UserRepository;
 import org.example.MunchMatch.Repository.ResultRepository;
 import org.example.MunchMatch.Repository.MealPlanRepository;
@@ -29,6 +28,12 @@ public class WebController {
     @Autowired
     MealPlanRepository repositoryMealPlan;
 
+    private final MealService mealService;
+
+    @Autowired
+    public WebController(MealService mealService) {
+        this.mealService = mealService;
+    }
 
     @GetMapping("/")
     public String indexPage(Model model) {
@@ -76,5 +81,20 @@ public class WebController {
         mealPlans.add(m1);
         return new ResultResponse(3L, mealPlans);
 
+    }
+
+
+    @GetMapping("/meal")
+    public MealResponse getMeals(
+            @RequestParam String title,
+            @RequestParam Double calories,
+            @RequestParam Double carbs,
+            @RequestParam Double fat,
+            @RequestParam Double protein,
+            @RequestParam Boolean vegetarian,
+            @RequestParam Boolean gluten,
+            @RequestParam Boolean dairy,
+            @RequestParam String dishTypes) {
+        return mealService.getMeals(title, calories, carbs, fat, protein, vegetarian, gluten, dairy, dishTypes);
     }
 }

@@ -1,4 +1,4 @@
-package org.example.MunchMatch.configDB;
+package org.example.MunchMatch.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -11,38 +11,37 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.example.MunchMatch", // Ensure consistency in package naming
-        entityManagerFactoryRef = "tertiaryEntityManagerFactory",
-        transactionManagerRef = "tertiaryTransactionManager"
-)
-public class MealPlanDataSourceConfig {
-
-    @Bean(name = "tertiaryDataSource")
+        basePackages = "com.example.MunchMatch",
+        entityManagerFactoryRef = "secondaryEntityManagerFactory",
+        transactionManagerRef = "secondaryTransactionManager")
+public class ResultDataSourceConfig {
+    @Bean(name = "secondaryDataSource")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:file:./data/tertiaryDB"); // Ensure correct path and permissions
+        dataSource.setUrl("jdbc:h2:file:./data/resultDB");
         dataSource.setUsername("admin");
         dataSource.setPassword("password");
         return dataSource;
     }
 
-    @Bean(name = "tertiaryEntityManagerFactory")
+    @Bean(name = "secondaryEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("tertiaryDataSource") DataSource dataSource) {
+            @Qualifier("secondaryDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.example.MunchMatch")  // Consistent package name
-                .persistenceUnit("tertiary")
+                .packages("com.example.MunchMatch") // your entity package
+                .persistenceUnit("secondary")
                 .build();
     }
 
-    @Bean(name = "tertiaryTransactionManager")
+    @Bean(name = "secondaryTransactionManager")
     public PlatformTransactionManager transactionManager(
-            @Qualifier("tertiaryEntityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+            @Qualifier("secondaryEntityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory.getObject());
     }
 }
