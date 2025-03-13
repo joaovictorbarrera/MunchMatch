@@ -29,36 +29,43 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
 
     const MIN_MEALS_TO_PROGRESS = 20
 
-    function fetchmealData() {
+    function fetchMealData() {
         // TODO
-        fetch(`${import.meta.env.VITE_API_URL}/suggestions`, {
+        fetch(`/suggestions`, {
             method: 'post',
             body: JSON.stringify({questionnaire, rejectedMeals})
         })
         .then(res => res.json())
         .then(data => {
             console.log(data)
-            // data = data.map((meal: any) => {
-            //     let formattedMeal: Meal = {imageUrl: meal.imageUrl, title: meal.mealName, nutrition: {
-            //         calories: meal.calories,
-            //         protein: meal.protein,
-            //         carbs: meal.carbs,
-            //         fat: meal.fat
-            //     }, mealID: meal.idMeal}
-            //     return formattedMeal
-            // })
-            setMealData(data)
+            data = data.map((meal: any) => {
+                console.log(meal)
+                let formattedMeal: Meal = {
+                    imageUrl: meal.image, 
+                    title: meal.title, 
+                    nutrition: {
+                        calories: meal.calories,
+                        protein: meal.protein,
+                        carbs: meal.carbs,
+                        fat: meal.fat
+                    }, 
+                    mealID: meal.id,
+                    type: meal.dishTypes
+                }
+                return formattedMeal
+            })
+            setMealData(oldData => [...oldData, ...data])
         })
     }
 
     useEffect(() => {
-        fetchmealData()
+        fetchMealData()
     }, [])
 
     function nextDish() {
         setCurrentDishIndex(n => {
             // TODO
-            if (n + 1 == mealData.length) return 0 // temporary
+            if (n + 1 == mealData.length) fetchMealData()
             return n + 1
         })
     }
