@@ -23,7 +23,7 @@ function ResultStep() {
 
     function fetchResult() {
         //TODO
-        fetch(`${import.meta.env.VITE_API_URL}/results`, {
+        fetch(`/results`, {
             method: 'post',
             body: JSON.stringify(acceptedMeals)
         })
