@@ -23,10 +23,11 @@ function Window() {
   const [acceptedMeals, setAcceptedMeals] = useState<Meal[]>([]);
 
   const [page, setPage] = useState<number>(1)
+  const [homePage, setHomePage] = useState<number>(1)
 
   const pageComponents = new Map(
     [
-        [1, <Home />],
+        [1, <Home page={homePage} setPage={setHomePage} />],
         [2, <About />],
         [3, <Mission />],
         [4, <Contact />]

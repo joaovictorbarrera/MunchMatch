@@ -47,7 +47,7 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
             //     }, mealID: meal.idMeal}
             //     return formattedMeal
             // })
-            setMealData(data)
+            setMealData(oldData => [...oldData, ...data])
         })
     }
 
@@ -58,7 +58,7 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
     function nextDish() {
         setCurrentDishIndex(n => {
             // TODO
-            if (n + 1 == mealData.length) return 0 // temporary
+            if (n + 1 == mealData.length) fetchmealData()
             return n + 1
         })
     }
@@ -78,10 +78,10 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
         handleNextPage()
     }
 
-    if (currentDishIndex >= mealData.length) return null
+    if (currentDishIndex >= mealData.length) return "No meal data available :("
 
     return (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 w-full">
             <MealCard
                 mealData={mealData}
                 currentDishIndex={currentDishIndex}
@@ -135,7 +135,7 @@ interface MealCardProps {
 function MealCard({mealData, currentDishIndex}: MealCardProps) {
     return (
         <div className="flex gap-10">
-            <img className="bg-black w-[33%] aspect-square object-cover" src={mealData[currentDishIndex].imageUrl} alt="" />
+            <img className="bg-black w-[400px] aspect-square object-cover" src={mealData[currentDishIndex].imageUrl} alt="" />
             <header className="p-5 flex flex-col gap-5 flex-1 text-xl items-start">
                 <h1 className="text-4xl text-mm-text">{mealData[currentDishIndex].title}</h1>
                 <span className="bg-mm-secondary p-3 rounded-xl text-mm-text font-bold">{mealData[currentDishIndex].nutrition.calories} calories</span>

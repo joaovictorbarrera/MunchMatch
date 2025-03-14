@@ -1,10 +1,9 @@
-import { useState } from "react"
+
 import QuestionnaireStep from "./QuestionnaireStep"
 import ResultStep from "./ResultStep"
 import MealSelectionStep from "./MealSelectionStep"
 
-function Home() {
-    const [page, setPage] = useState<number>(1)
+function Home({page, setPage}: {page:number, setPage: React.Dispatch<React.SetStateAction<number>>}) {
 
     function handleNextPage() {
         setPage(state => {
