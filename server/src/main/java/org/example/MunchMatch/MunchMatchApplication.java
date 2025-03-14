@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 @Configuration
 @SpringBootApplication
-@ComponentScan(basePackages = "WebController")
+@ComponentScan(basePackages = {"WebController", "org.example.MunchMatch.API"})
 public class MunchMatchApplication {
 
     public static void main(String[] args) {

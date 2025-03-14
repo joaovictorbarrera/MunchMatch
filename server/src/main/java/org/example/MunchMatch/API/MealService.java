@@ -11,49 +11,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MealPlanService {
+public class MealService {
 
-    private static final String BASE_URL = "https://api.spoonacular.com/";
-
+    @Value("${spoonacular.api.url}")
+    private String API_URL;
     @Value("${API_KEY}")
     private String API_KEY;
 
     private final RestTemplate restTemplate;
 
-    public MealPlanService(RestTemplate restTemplate) {
+    public MealService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public List<Meal> getMeals(String title,  Double calories,Double carbs, Double fat,Double protein, String image, String imageType, Boolean vegetarian,Boolean gluten, Boolean dairy, List<String> dishTypes) {
+    public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes) {
 
 
         List<String> intolerances = new ArrayList<>();
         if (gluten != null && gluten) intolerances.add("gluten");
         if (dairy != null && dairy) intolerances.add("dairy");
 
-        String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "recipes/complexSearch")
+        String url = UriComponentsBuilder.fromHttpUrl(API_URL)
                 .queryParam("query", title)
                 .queryParam("maxCalories", calories)
                 .queryParam("maxCarbs", carbs)
                 .queryParam("maxFat", fat)
                 .queryParam("maxProtein", protein)
-                .queryParam("image", image)
-                .queryParam("imageType", imageType)
                 .queryParam("diet", vegetarian != null && vegetarian ? "vegetarian" : "")
                 .queryParam("intolerances", String.join(",", intolerances))
                 .queryParam("dishTypes", String.join(",", dishTypes))
                 .queryParam("apiKey", API_KEY)
                 .toUriString();
 
-        MealResponse response = restTemplate.getForObject(url, MealResponse.class);
+        return restTemplate.getForObject(url, MealResponse.class);
 
-        if (response != null && response.getResults() != null) {
-            return response.getResults();
-        } else {
-            throw new RuntimeException("No meals found with the provided parameters.");
-        }
     }
 }
 
 //This works   https://api.spoonacular.com/recipes/complexSearch?query=salad&type=lunch&maxProtein=150&maxCarbs=150&maxFat=100&maxCalories=1000&diet=vegetarian&intolerances=gluten,dairy&apiKey=apikey
-//Local host is not working   http://localhost:8080/meal?title=salad&dishTypes=lunch&protein=150&carbs=150&fat=100&calories=1000.5&vegetarian=true&gluten=true&dairy=true
+//Local host works too  http://localhost:8081/meal?title=salad&dishTypes=lunch&protein=150&carbs=150&fat=100&calories=1000&vegetarian=true&gluten=true&dairy=true

@@ -1,4 +1,4 @@
-package org.example.MunchMatch.configDB;
+package org.example.MunchMatch.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
