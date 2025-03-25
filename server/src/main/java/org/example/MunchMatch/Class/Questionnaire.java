@@ -30,33 +30,33 @@ public class Questionnaire {
     }
 
     public static class Nutrition {
-        private int protein;
-        private int carbs;
-        private int fat;
+        private Integer protein;
+        private Integer carbs;
+        private Integer fat;
 
         // Getters and Setters
 
-        public int getProtein() {
+        public Integer getProtein() {
             return protein;
         }
 
-        public void setProtein(int protein) {
+        public void setProtein(Integer protein) {
             this.protein = protein;
         }
 
-        public int getCarbs() {
+        public Integer getCarbs() {
             return carbs;
         }
 
-        public void setCarbs(int carbs) {
+        public void setCarbs(Integer carbs) {
             this.carbs = carbs;
         }
 
-        public int getFat() {
+        public Integer getFat() {
             return fat;
         }
 
-        public void setFat(int fat) {
+        public void setFat(Integer fat) {
             this.fat = fat;
         }
     }
