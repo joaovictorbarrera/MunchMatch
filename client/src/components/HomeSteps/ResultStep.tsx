@@ -22,9 +22,13 @@ function ResultStep() {
     const {acceptedMeals} = useContext(AcceptedMealContext)
 
     function fetchResult() {
+        const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/results" : "/results"
         //TODO
         fetch(`/results`, {
             method: 'post',
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(acceptedMeals)
         })
         .then(res => res.json())
