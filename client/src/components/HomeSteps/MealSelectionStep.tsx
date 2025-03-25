@@ -18,7 +18,7 @@ export interface Meal {
     mealID: number
 }
 
-function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
+function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage: () => void, handlePreviousPage: () => void}) {
     const {questionnaire,} = useContext(QuestionnaireContext)
 
     const [currentDishIndex, setCurrentDishIndex] = useState<number>(0);
@@ -89,7 +89,10 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
         handleNextPage()
     }
 
-    if (currentDishIndex >= mealData.length) return "No meal data available :("
+    if (currentDishIndex >= mealData.length) return <div>
+        <p>No meal data available</p>
+        <button onClick={handlePreviousPage}>Back</button>
+    </div>
 
     return (
         <div className="flex flex-col gap-10 w-full">
