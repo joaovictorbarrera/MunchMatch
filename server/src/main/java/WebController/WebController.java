@@ -3,7 +3,6 @@ package WebController;
 import org.example.MunchMatch.API.MealService;
 import org.example.MunchMatch.Class.*;
 
-import org.example.MunchMatch.Repository.MealRepository;
 import org.example.MunchMatch.Repository.UserRepository;
 import org.example.MunchMatch.Repository.ResultRepository;
 import org.example.MunchMatch.Repository.MealPlanRepository;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +33,6 @@ public class WebController {
     ResultRepository repositoryResult;
     @Autowired
     MealPlanRepository repositoryMealPlan;
-    @Autowired
-    MealRepository mealRepository;
 
     private final MealService mealService;
 
@@ -111,7 +106,6 @@ public class WebController {
 
     @PostMapping("/suggestions")
     public List<Meal> getMealSuggestions(@RequestBody MealRequest request) {
-
         // Destructure questionnaire and rejectedMeals from the request
         Questionnaire questionnaire = request.getQuestionnaire();
         List<Integer> rejectedMeals = request.getRejectedMeals();
@@ -125,20 +119,15 @@ public class WebController {
         boolean glutenFree = questionnaire.getRestrictions().isGlutenFree();
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
 
-        List<Meal> meals = mealRepository.findAll();
+        // Get meals from mealService based on the user's preferences
+        List<Meal> meals = mealService.getMeals("", preferredCalories, preferredCarbs, preferredFat, preferredProtein, vegetarian, glutenFree, lactoseFree, "").getResults();
 
-        // Apply filtering on the list of meals
+        // Apply filtering on the list of meals based on rejected meals
         return meals.stream()
                 .filter(meal -> !rejectedMeals.contains(meal.getId())) // Exclude rejected meals
-                .filter(meal -> meal.getCalories() <= preferredCalories)
-                .filter(meal -> meal.getProtein() >= preferredProtein)
-                .filter(meal -> meal.getCarbs() <= preferredCarbs)
-                .filter(meal -> meal.getFat() <= preferredFat)
-                .filter(meal -> lactoseFree ? meal.isDairy() : true)
-                .filter(meal -> glutenFree ? meal.isGluten() : true)
-                .filter(meal -> vegetarian ? meal.isVegetarian() : true)
                 .collect(Collectors.toList());
     }
+
 
 
     @PostMapping("/results")
