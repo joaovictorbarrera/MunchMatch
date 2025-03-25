@@ -23,11 +23,11 @@ public class MealService {
     public MealService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-    if(API_KEY.equals("api")){
-        System.out.println("ADD API KAY");
-    }
-    public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes) {
     
+    public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes) {
+        if(API_KEY.equals("api")){
+        System.out.println("ADD API KAY");
+        }
 
         List<String> intolerances = new ArrayList<>();
         if (gluten != null && gluten) intolerances.add("gluten");
