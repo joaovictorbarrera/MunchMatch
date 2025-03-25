@@ -8,6 +8,7 @@ import org.example.MunchMatch.Repository.UserRepository;
 import org.example.MunchMatch.Repository.ResultRepository;
 import org.example.MunchMatch.Repository.MealPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,12 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 
 public class WebController {
+
+    private MealSelectionService mealSelectionService;
+
+    public void MealSelectionController(MealSelectionService mealSelectionService) {
+        this.mealSelectionService = mealSelectionService;
+    }
 
     @Autowired
     UserRepository repository;
@@ -133,4 +140,11 @@ public class WebController {
                 .filter(meal -> vegetarian ? meal.isVegetarian() : true)
                 .collect(Collectors.toList());
     }
+
+
+    @PostMapping("/results")
+    public ResponseEntity<ResultResponse> createMealPlan(@RequestBody List<Long> acceptedMeals) {
+        return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
+    }
+
 }
