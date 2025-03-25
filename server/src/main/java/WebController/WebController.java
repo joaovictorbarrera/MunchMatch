@@ -99,9 +99,9 @@ public class WebController {
     public MealResponse getMeals(
             @RequestParam String title,
             @RequestParam Double calories,
-            @RequestParam Double carbs,
-            @RequestParam Double fat,
-            @RequestParam Double protein,
+            @RequestParam (required = false) Double carbs,
+            @RequestParam (required = false) Double fat,
+            @RequestParam (required = false) Double protein,
             @RequestParam Boolean vegetarian,
             @RequestParam Boolean gluten,
             @RequestParam Boolean dairy,
@@ -118,14 +118,13 @@ public class WebController {
 
         // Destructure preferences from the questionnaire
         int preferredCalories = questionnaire.getCalories();
-        int preferredProtein = questionnaire.getNutrition().getProtein();
-        int preferredCarbs = questionnaire.getNutrition().getCarbs();
-        int preferredFat = questionnaire.getNutrition().getFat();
+        int preferredProtein = questionnaire.getNutrition().getProtein() != null ? questionnaire.getNutrition().getProtein() : 0; // Default to 0
+        int preferredCarbs = questionnaire.getNutrition().getCarbs() != null ? questionnaire.getNutrition().getCarbs() : 0; // Default to 0
+        int preferredFat = questionnaire.getNutrition().getFat() != null ? questionnaire.getNutrition().getFat() : 0; // Default to 0
         boolean lactoseFree = questionnaire.getRestrictions().isLactoseFree();
         boolean glutenFree = questionnaire.getRestrictions().isGlutenFree();
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
 
-        // Fetch all meals from the database
         List<Meal> meals = mealRepository.findAll();
 
         // Apply filtering on the list of meals
