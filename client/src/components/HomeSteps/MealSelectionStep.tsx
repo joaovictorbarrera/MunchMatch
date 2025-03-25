@@ -30,9 +30,13 @@ function MealSelectionStep({handleNextPage}: {handleNextPage: () => void}) {
     const MIN_MEALS_TO_PROGRESS = 20
 
     function fetchMealData() {
+        const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/suggestions" : "/suggestions"
         // TODO
-        fetch(`/suggestions`, {
+        fetch(URL, {
             method: 'post',
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({questionnaire, rejectedMeals})
         })
         .then(res => res.json())
