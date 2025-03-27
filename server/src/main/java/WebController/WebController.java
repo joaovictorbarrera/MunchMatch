@@ -54,41 +54,6 @@ public class WebController {
 
     }
 
-    //http://localhost:8080/suggestions - works.
-    /*@PostMapping("/suggestions")
-    public List<Meal> createSuggestions() {
-        return Arrays.asList(
-                new Meal(1L, "Salad", 123.0, 100, 100, 100,"image", "jpg", true, false, true, "lunch"),
-                new Meal(2L, "Pasta",  345.0,200, 200, 200,"image", "jpg", true, false, true, "dinner")
-        );
-    }
-
-    //http://localhost:8080/results - works.
-    @PostMapping("/results")
-    public ResultResponse createResults() {
-        ArrayList<MealPlan> mealPlans = new ArrayList<>();
-        MealPlan m1 = new MealPlan(5L, Arrays.asList(
-                new Meal(1L, "Salad", 123.0, 100, 100, 100,"image", "jpg", true, false, true, "lunch"),
-                new Meal(2L, "Pasta",  345.0,200, 200, 200,"image", "jpg", true, false, true, "dinner")
-        ), 2L);
-        mealPlans.add(m1);
-        return new ResultResponse(3L, mealPlans);
-
-    }*/
-    /*//http://localhost:8080/results?resultId=123  - works.
-    @GetMapping("/results")
-    public ResultResponse resultsPage(@RequestParam Long resultId) {
-
-        ArrayList<MealPlan> mealPlans = new ArrayList<>();
-        MealPlan m1 = new MealPlan(5L, Arrays.asList(
-                new Meal(1L, "Salad", 123.0, 100, 100, 100,"image", "jpg", true, false, true, "lunch"),
-                new Meal(2L, "Pasta",  345.0,200, 200, 200,"image", "jpg", true, false, true, "dinner")
-        ), 2L);
-        mealPlans.add(m1);
-        return new ResultResponse(3L, mealPlans);
-
-    }*/
-
 
     @GetMapping("/meal")
     public MealResponse getMeals(
@@ -100,36 +65,38 @@ public class WebController {
             @RequestParam Boolean vegetarian,
             @RequestParam Boolean gluten,
             @RequestParam Boolean dairy,
-            @RequestParam String dishTypes) {
-        return mealService.getMeals(title, calories, carbs, fat, protein, vegetarian, gluten, dairy, dishTypes);
+            @RequestParam (required = false) String dishTypes,
+            @RequestParam int number,
+            @RequestParam int offset) {
+        return mealService.getMeals(title, calories, carbs, fat, protein, vegetarian, gluten, dairy, dishTypes, number, offset);
     }
 
     @PostMapping("/suggestions")
-    public List<Meal> getMealSuggestions(@RequestBody MealRequest request) {
-        // Destructure questionnaire and rejectedMeals from the request
+    public List<Meal> getMealSuggestions(@RequestBody MealRequest request, int number, int offset) {
+
         Questionnaire questionnaire = request.getQuestionnaire();
-        List<Integer> rejectedMeals = request.getRejectedMeals();
+        List<Integer> seenMeals = request.getSeenMeals();
 
         // Destructure preferences from the questionnaire
         int preferredCalories = questionnaire.getCalories();
-        int preferredProtein = questionnaire.getNutrition().getProtein() != null ? questionnaire.getNutrition().getProtein() : 0; // Default to 0
-        int preferredCarbs = questionnaire.getNutrition().getCarbs() != null ? questionnaire.getNutrition().getCarbs() : 0; // Default to 0
-        int preferredFat = questionnaire.getNutrition().getFat() != null ? questionnaire.getNutrition().getFat() : 0; // Default to 0
+        int preferredProtein = questionnaire.getNutrition().getProtein() != null ? questionnaire.getNutrition().getProtein() : 1000; // Default to 0
+        int preferredCarbs = questionnaire.getNutrition().getCarbs() != null ? questionnaire.getNutrition().getCarbs() : 1000; // Default to 0
+        int preferredFat = questionnaire.getNutrition().getFat() != null ? questionnaire.getNutrition().getFat() : 1000; // Default to 0
         boolean lactoseFree = questionnaire.getRestrictions().isLactoseFree();
         boolean glutenFree = questionnaire.getRestrictions().isGlutenFree();
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
-
         // Get meals from mealService based on the user's preferences
-        List<Meal> meals = mealService.getMeals("", preferredCalories, preferredCarbs, preferredFat, preferredProtein, vegetarian, glutenFree, lactoseFree, "").getResults();
+        List<Meal> meals = mealService.getMeals("", preferredCalories, preferredCarbs, preferredFat, preferredProtein, vegetarian, glutenFree, lactoseFree, "", number, offset).getResults();
 
-        // Apply filtering on the list of meals based on rejected meals
+        // Apply filtering on the list of meals based on seen meals
         return meals.stream()
-                .filter(meal -> !rejectedMeals.contains(meal.getId())) // Exclude rejected meals
+                .filter(meal -> !seenMeals.contains(meal.getId())) // Exclude seen meals
+                .skip(offset) //Offset for each page
+                .limit(number) //limit
                 .collect(Collectors.toList());
     }
 
-
-
+    //Create a meal plan results
     @PostMapping("/results")
     public ResponseEntity<ResultResponse> createMealPlan(@RequestBody List<Long> acceptedMeals) {
         return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
