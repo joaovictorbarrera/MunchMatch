@@ -24,7 +24,7 @@ public class MealService {
         this.restTemplate = restTemplate;
     }
     
-    public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes) {
+    public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes, int number, int offset) {
         if(API_KEY.equals("api")){
         System.out.println("ADD API KAY");
         }
@@ -32,7 +32,6 @@ public class MealService {
         List<String> intolerances = new ArrayList<>();
         if (gluten != null && gluten) intolerances.add("gluten");
         if (dairy != null && dairy) intolerances.add("dairy");
-
         String url = UriComponentsBuilder.fromHttpUrl(API_URL)
                 .queryParam("query", title)
                 .queryParam("maxCalories", calories)
@@ -42,6 +41,8 @@ public class MealService {
                 .queryParam("diet", vegetarian != null && vegetarian ? "vegetarian" : "")
                 .queryParam("intolerances", String.join(",", intolerances))
                 .queryParam("dishTypes", String.join(",", dishTypes))
+                .queryParam("number", 100)  // Always request 100 meals
+                .queryParam("offset", 0)
                 .queryParam("apiKey", API_KEY)
                 .toUriString();
 

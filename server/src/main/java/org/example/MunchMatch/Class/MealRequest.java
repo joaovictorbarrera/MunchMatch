@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MealRequest {
     private Questionnaire questionnaire;
-    private List<Integer> rejectedMeals;
+    private List<Integer> seenMeals;
 
     // Getters and Setters
 
@@ -16,11 +16,11 @@ public class MealRequest {
         this.questionnaire = questionnaire;
     }
 
-    public List<Integer> getRejectedMeals() {
-        return rejectedMeals;
+    public List<Integer> getSeenMeals() {
+        return seenMeals;
     }
 
-    public void setRejectedMeals(List<Integer> rejectedMeals) {
-        this.rejectedMeals = rejectedMeals;
+    public void setSeenMeals(List<Integer> seenMeals) {
+        this.seenMeals = seenMeals;
     }
 }
