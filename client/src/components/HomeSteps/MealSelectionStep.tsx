@@ -25,7 +25,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
     const [mealData, setMealData] = useState<Meal[]>([])
 
     const {acceptedMeals, setAcceptedMeals} = useContext(AcceptedMealContext)
-    const [rejectedMeals, setRejectedMeals] = useState<number[]>([]);
+    const [seenMeals, setSeenMeals] = useState<number[]>([]);
 
     const MIN_MEALS_TO_PROGRESS = 20
 
@@ -37,7 +37,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({questionnaire, rejectedMeals})
+            body: JSON.stringify({questionnaire, seenMeals})
         })
         .then(res => res.json())
         .then(data => {
@@ -76,7 +76,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
 
     function handleReject() {
         nextDish()
-        setRejectedMeals(arr => [...arr, mealData[currentDishIndex].mealID])
+        setSeenMeals(arr => [...arr, mealData[currentDishIndex].mealID])
     }
 
     function handleÁccept() {
