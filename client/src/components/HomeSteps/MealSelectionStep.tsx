@@ -28,9 +28,10 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
     const [seenMeals, setSeenMeals] = useState<number[]>([]);
 
     const MIN_MEALS_TO_PROGRESS = 20
+    let offset = 0
 
     function fetchMealData() {
-        const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/suggestions" : "/suggestions"
+        const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + `/suggestions?number=100&offset=${offset}` : `/suggestions?number=100&offset=${offset}`
         // TODO
         fetch(URL, {
             method: 'post',
@@ -79,8 +80,9 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
         setSeenMeals(arr => [...arr, mealData[currentDishIndex].mealID])
     }
 
-    function handleÁccept() {
+    function handleAccept() {
         nextDish()
+        setSeenMeals(arr => [...arr, mealData[currentDishIndex].mealID])
         setAcceptedMeals(arr => [...arr, mealData[currentDishIndex]])
     }
 
@@ -99,9 +101,13 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
             <MealCard
                 mealData={mealData}
                 currentDishIndex={currentDishIndex}
+                handleAccept={handleAccept}
+                handleReject={handleReject}
+                handleGetResults={handleGetResults}
+                acceptedMealsLength={acceptedMeals.length}
             />
 
-            <div className="flex gap-25 items-center">
+            <div className="hidden xl:flex flex-col xl:flex-row gap-25 items-center">
                 <button onClick={handleReject} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
                     Not really
                     <div className="w-10 h-10 bg-red-600 rounded-full relative">
@@ -110,7 +116,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
                         </IconContext.Provider>
                     </div>
                 </button>
-                <button onClick={handleÁccept} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
+                <button onClick={handleAccept} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
                     <div className="w-10 h-10 bg-green-600 rounded-full relative">
                         <IconContext.Provider value={{color: "66ff66", size:"2rem", className:"absolute top-[50%] left-[50%] -translate-[50%]"}}>
                             <RiCheckLine />
@@ -143,15 +149,46 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
 
 interface MealCardProps {
     mealData: Meal[],
-    currentDishIndex: number
+    currentDishIndex: number,
+    handleAccept: () => void,
+    handleReject: () => void,
+    handleGetResults: () => void,
+    acceptedMealsLength: number
 }
 
-function MealCard({mealData, currentDishIndex}: MealCardProps) {
+function MealCard({mealData, currentDishIndex, handleAccept, handleReject, handleGetResults, acceptedMealsLength}: MealCardProps) {
     return (
-        <div className="flex gap-10">
+        <div className="flex flex-col xl:flex-row xl:gap-10 gap-4 items-center">
             <img className="bg-black w-[400px] aspect-square object-cover" src={mealData[currentDishIndex].imageUrl} alt="" />
-            <header className="p-5 flex flex-col gap-5 flex-1 text-xl items-start">
-                <h1 className="text-4xl text-mm-text">{mealData[currentDishIndex].title}</h1>
+
+            <div className="xl:hidden flex gap-5">
+                <button onClick={handleReject} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
+                    <div className="w-15 h-15 bg-red-600 rounded-full relative">
+                        <IconContext.Provider value={{color: "#ffffff", size:"3rem", className:"absolute top-[50%] left-[50%] -translate-[50%]"}}>
+                            <RiCloseFill />
+                        </IconContext.Provider>
+                    </div>
+                </button>
+                <button onClick={handleAccept} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
+                    <div className="w-15 h-15 bg-green-600 rounded-full relative">
+                        <IconContext.Provider value={{color: "66ff66", size:"3rem", className:"absolute top-[50%] left-[50%] -translate-[50%]"}}>
+                            <RiCheckLine />
+                        </IconContext.Provider>
+                    </div>
+
+                </button>
+                <button onClick={handleGetResults} disabled={acceptedMealsLength < 20} className="cursor-pointer hover:brightness-90">
+                    <div className={`w-15 h-15 ${acceptedMealsLength < 20 ? 'bg-gray-500' : 'bg-blue-600'} rounded-full relative`}>
+                    <IconContext.Provider value={{color: `${acceptedMealsLength < 20 ? "#99a1af" : "#FFFFFF" }`, size:"3rem", className:"absolute top-[50%] left-[50%] -translate-[50%]"}}>
+                        <MdOutlineKeyboardDoubleArrowRight   />
+                    </IconContext.Provider>
+                    </div>
+
+                </button>
+            </div>
+
+            <header className="px-5 flex flex-col gap-5 flex-1 text-lg xl:text-xl items-start text-center w-full">
+                <h1 className="text-2xl xl:text-4xl text-mm-text">{mealData[currentDishIndex].title}</h1>
                 <span className="bg-mm-secondary p-3 rounded-xl text-mm-text font-bold">{mealData[currentDishIndex].nutrition.calories} calories</span>
                 <hr className="w-full bg-mm-text h-[1px]" />
                 <div className="flex flex-col gap-3">

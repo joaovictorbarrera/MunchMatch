@@ -34,7 +34,7 @@ function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
 
     return (
         <div className="w-full p-5 py-10 border-b-2 flex flex-col gap-30 border-mm-text">
-            <div className="h-[300px] flex items-center justify-center">
+            <div className=" flex items-center justify-center">
                 {stepComponents.get(step)}
             </div>
             {step > 0 ?

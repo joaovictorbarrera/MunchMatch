@@ -1,8 +1,8 @@
 function IntroCard({title, description}: {title:string, description:string}) {
     return (
         <li className="flex flex-1 flex-col bg-mm-primary p-5 rounded-2xl text-mm-text text-center gap-3">
-            <h2 className="text-3xl font-semibold">{title}</h2>
-            <p className="text-xl">{description}</p>
+            <h2 className="text-xl sm:text-3xl font-semibold">{title}</h2>
+            <p className="text-sm sm:text-xl">{description}</p>
         </li>
     )
 }
@@ -26,7 +26,7 @@ function Intro({handleNext}: {handleNext: () => void}) {
 
     return (
         <div className="flex flex-col gap-10">
-            <ul className="flex gap-20">
+            <ul className="flex flex-col gap-5 xl:gap-20 xl:flex-row">
                 <IntroCard title={text.personalProfile.title} description={text.personalProfile.description} />
                 <IntroCard title={text.smartSuggestions.title} description={text.smartSuggestions.description} />
                 <IntroCard title={text.mealPlanning.title} description={text.mealPlanning.description} />

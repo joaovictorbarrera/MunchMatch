@@ -24,7 +24,7 @@ function ResultStep() {
     function fetchResult() {
         const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/results" : "/results"
         //TODO
-        fetch(`/results`, {
+        fetch(URL, {
             method: 'post',
             headers: {
                 "Content-Type": "application/json"

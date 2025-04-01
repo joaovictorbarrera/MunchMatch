@@ -79,12 +79,13 @@ public class WebController {
 
         // Destructure preferences from the questionnaire
         int preferredCalories = questionnaire.getCalories();
-        int preferredProtein = questionnaire.getNutrition().getProtein() != null ? questionnaire.getNutrition().getProtein() : 1000; // Default to 0
-        int preferredCarbs = questionnaire.getNutrition().getCarbs() != null ? questionnaire.getNutrition().getCarbs() : 1000; // Default to 0
-        int preferredFat = questionnaire.getNutrition().getFat() != null ? questionnaire.getNutrition().getFat() : 1000; // Default to 0
+        int preferredProtein = questionnaire.getNutrition().getProtein() > 0 ? questionnaire.getNutrition().getProtein() : 1000; // Default to 0
+        int preferredCarbs = questionnaire.getNutrition().getCarbs() > 0 ? questionnaire.getNutrition().getCarbs() : 1000; // Default to 0
+        int preferredFat = questionnaire.getNutrition().getFat() > 0 ? questionnaire.getNutrition().getFat() : 1000; // Default to 0
         boolean lactoseFree = questionnaire.getRestrictions().isLactoseFree();
         boolean glutenFree = questionnaire.getRestrictions().isGlutenFree();
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
+
         // Get meals from mealService based on the user's preferences
         List<Meal> meals = mealService.getMeals("", preferredCalories, preferredCarbs, preferredFat, preferredProtein, vegetarian, glutenFree, lactoseFree, "", number, offset).getResults();
 

@@ -1,8 +1,8 @@
 export default function Contact() {
     return (
-        <div className="flex flex-col mt-20">
-            <h2 className="text-mm-text text-4xl">Contact</h2>
-            <div className="flex flex-col gap-10 mt-5 p-10 text-2xl">
+        <div className="flex flex-col mt-20 p-10">
+            <h2 className="text-mm-text text-2xl xl:text-4xl">Contact</h2>
+            <div className="flex flex-col gap-10 mt-5 sm:p-10 text-sm sm:text-2xl text-wrap">
                 <p>We'd love to hear from you! Whether you have questions, feedback, or need support, feel free to reach out to us.</p>
 
                 <div className="flex flex-col">
