@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CiMenuBurger } from "react-icons/ci";
+import { IconContext } from "react-icons";
+import { GrMenu } from "react-icons/gr";
 
 function NavBar({page, setPage}: {page:number, setPage: (page: number) => void}) {
 
@@ -14,7 +15,9 @@ function NavBar({page, setPage}: {page:number, setPage: (page: number) => void})
 
                 <div className="lg:hidden" >
                     <button onClick={() => setIsOpen(s => !s)}>
-                        <CiMenuBurger />
+                        <IconContext.Provider value={{color: "green", size:"2rem"}}>
+                            <GrMenu />
+                        </IconContext.Provider>
                     </button>
                 </div>
 
@@ -31,11 +34,11 @@ function NavBar({page, setPage}: {page:number, setPage: (page: number) => void})
 }
 
 function Menu({page, setPage}: {page:number, setPage: (page: number) => void}) {
-    return <ul className="lg:hidden flex flex-col items-center text-center text-2xl">
-        <li className="bg-mm-primary w-full p-3"><button onClick={() => setPage(1)} className={`${page == 1 ? 'selected' : ''} cursor-pointer`}>Home</button></li>
-        <li className="bg-mm-primary w-full p-3"><button onClick={() => setPage(2)} className={`${page == 2 ? 'selected' : ''} cursor-pointer`}>About</button></li>
-        <li className="bg-mm-primary w-full p-3"><button onClick={() => setPage(3)} className={`${page == 3 ? 'selected' : ''} cursor-pointer`}>Mission</button></li>
-        <li className="bg-mm-primary w-full p-3"><button onClick={() => setPage(4)} className={`${page == 4 ? 'selected' : ''} cursor-pointer`}>Contact</button></li>
+    return <ul className="lg:hidden flex flex-col items-center text-center text-2xl text-mm-text">
+        <li className="bg-mm-primary w-full p-3 hover:brightness-90"><button onClick={() => setPage(1)} className={`${page == 1 ? 'selected' : ''} cursor-pointer`}>Home</button></li>
+        <li className="bg-mm-primary w-full p-3 hover:brightness-90"><button onClick={() => setPage(2)} className={`${page == 2 ? 'selected' : ''} cursor-pointer`}>About</button></li>
+        <li className="bg-mm-primary w-full p-3 hover:brightness-90"><button onClick={() => setPage(3)} className={`${page == 3 ? 'selected' : ''} cursor-pointer`}>Mission</button></li>
+        <li className="bg-mm-primary w-full p-3 hover:brightness-90"><button onClick={() => setPage(4)} className={`${page == 4 ? 'selected' : ''} cursor-pointer`}>Contact</button></li>
     </ul>
 }
 
