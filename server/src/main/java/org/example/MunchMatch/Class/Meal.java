@@ -16,7 +16,6 @@ public class Meal {
     private double fat;
     private double protein;
     private String image;
-    private String imageType;
     private boolean vegetarian;
     private boolean gluten;
     private boolean dairy;
@@ -24,8 +23,6 @@ public class Meal {
 
     @Column(name = "mealPlanId")
    private Long mealPlanId;
-
-
 
     public Meal() {
     }
@@ -38,7 +35,6 @@ public class Meal {
         this.fat = fat;
         this.protein = protein;
         this.image = image;
-        this.imageType = imageType;
         this.vegetarian = vegetarian;
         this.gluten = gluten;
         this.dairy = dairy;
@@ -64,8 +60,6 @@ public class Meal {
     public void setProtein(double protein) { this.protein = protein; }
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
-    public String getImageType() { return imageType; }
-    public void setImageType(String imageType) { this.imageType = imageType; }
     public boolean isVegetarian() { return vegetarian; }
     public void setVegetarian(boolean vegetarian) { this.vegetarian = vegetarian; }
     public boolean isGluten() { return gluten; }
@@ -85,7 +79,6 @@ public class Meal {
                 ", fat='" + fat + '\'' +
                 ", protein='" + protein + '\'' +
                 ", image='" + image + '\'' +
-                ", imageType='" + imageType + '\'' +
                 ", vegetarian=" + vegetarian +
                 ", gluten=" + gluten +
                 ", dairy=" + dairy +

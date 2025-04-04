@@ -29,6 +29,15 @@ public class Questionnaire {
         this.restrictions = restrictions;
     }
 
+    @Override
+    public String toString() {
+        return "Questionnaire{" +
+                "calories=" + calories +
+                ", nutrition=" + (nutrition != null ? nutrition.toString() : "null") +
+                ", restrictions=" + (restrictions != null ? restrictions.toString() : "null") +
+                '}';
+    }
+
     public static class Nutrition {
         private Integer protein;
         private Integer carbs;
@@ -58,6 +67,15 @@ public class Questionnaire {
 
         public void setFat(Integer fat) {
             this.fat = fat;
+        }
+
+        @Override
+        public String toString() {
+            return "Nutrition{" +
+                    "protein=" + protein +
+                    ", carbs=" + carbs +
+                    ", fat=" + fat +
+                    '}';
         }
     }
 
@@ -90,6 +108,15 @@ public class Questionnaire {
 
         public void setVegetarian(boolean vegetarian) {
             this.vegetarian = vegetarian;
+        }
+
+        @Override
+        public String toString() {
+            return "Restrictions{" +
+                    "lactoseFree=" + lactoseFree +
+                    ", glutenFree=" + glutenFree +
+                    ", vegetarian=" + vegetarian +
+                    '}';
         }
     }
 }

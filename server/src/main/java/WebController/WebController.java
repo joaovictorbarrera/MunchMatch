@@ -3,6 +3,7 @@ package WebController;
 import org.example.MunchMatch.API.MealService;
 import org.example.MunchMatch.Class.*;
 
+import org.example.MunchMatch.Mock.MockResultData;
 import org.example.MunchMatch.Repository.UserRepository;
 import org.example.MunchMatch.Repository.ResultRepository;
 import org.example.MunchMatch.Repository.MealPlanRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +76,10 @@ public class WebController {
     @PostMapping("/suggestions")
     public List<Meal> getMealSuggestions(@RequestBody MealRequest request, int number, int offset) {
 
+        System.out.println(request);
+        System.out.println("number: " + number);
+        System.out.println("offset: " + offset);
+
         Questionnaire questionnaire = request.getQuestionnaire();
         List<Integer> seenMeals = request.getSeenMeals();
 
@@ -99,8 +105,11 @@ public class WebController {
 
     //Create a meal plan results
     @PostMapping("/results")
-    public ResponseEntity<ResultResponse> createMealPlan(@RequestBody List<Long> acceptedMeals) {
-        return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
+    public ResultResponse createMealPlan(@RequestBody ResultRequest request) {
+        // ResponseEntity<ResultResponse>
+//        return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
+        System.out.println(request);
+        return MockResultData.makeData(request.getAcceptedMeals());
     }
 
 }

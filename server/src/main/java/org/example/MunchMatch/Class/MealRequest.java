@@ -23,4 +23,11 @@ public class MealRequest {
     public void setSeenMeals(List<Integer> seenMeals) {
         this.seenMeals = seenMeals;
     }
+
+    public String toString() {
+        return "MealRequest{" +
+                "questionnaire=" + (questionnaire != null ? questionnaire.toString() : "null") +
+                ", seenMeals=" + (seenMeals != null ? seenMeals.toString() : "null") +
+                '}';
+    }
 }

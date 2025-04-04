@@ -18,7 +18,7 @@ public class MealPlan {
 
     )
     @JoinColumn(name = "mealPlanId")
-    private List<Meal> meal;
+    private List<Meal> meals;
 
     @Column(name="resultId")
     private Long resultId;
@@ -26,9 +26,9 @@ public class MealPlan {
     public MealPlan() {
     }
 
-    public MealPlan(Long mealPlanId, List<Meal> meal, Long resultId) {
+    public MealPlan(Long mealPlanId, List<Meal> meals, Long resultId) {
         this.mealPlanId = mealPlanId;
-        this.meal = meal;
+        this.meals = meals;
         this.resultId = resultId;
     }
 
@@ -40,12 +40,12 @@ public class MealPlan {
         this.mealPlanId = mealPlanId;
     }
 
-    public List<Meal> getMeal() {
-        return meal;
+    public List<Meal> getMeals() {
+        return meals;
     }
 
-    public void setMeal(List<Meal> meal) {
-        this.meal = meal;
+    public void setMeals(List<Meal> meal) {
+        this.meals = meal;
     }
 
     public Long getResultId() {

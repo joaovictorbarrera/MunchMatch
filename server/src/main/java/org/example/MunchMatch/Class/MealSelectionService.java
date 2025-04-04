@@ -14,8 +14,8 @@ public class MealSelectionService {
         this.resultRepository = resultRepository;
     }
 
-    public ResultResponse saveResult(List<Long> acceptedMeals) {
-        ResultResponse result = new ResultResponse(acceptedMeals);
+    public ResultResponse saveResult(List<MealPlan> mealPlans) {
+        ResultResponse result = new ResultResponse(mealPlans);
         return resultRepository.save(result);
     }
 }
