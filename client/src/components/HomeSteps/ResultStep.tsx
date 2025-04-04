@@ -6,10 +6,9 @@ import MealModal from "./Modals/MealModal";
 import EmailModal from "./Modals/EmailModal";
 
 export interface MealPlan {
-    breakfast: Meal,
-    lunch: Meal,
-    snack: Meal,
-    dinner: Meal
+    mealPlanID: number,
+    meals: Meal[],
+    resultId: number
 }
 
 export interface Result {
@@ -18,40 +17,53 @@ export interface Result {
 }
 
 function ResultStep() {
-    const [result, setResult] = useState<Result>();
+    const {questionnaire,} = useContext(QuestionnaireContext)
     const {acceptedMeals} = useContext(AcceptedMealContext)
+
+    const [result, setResult] = useState<Result>();
+    const [loading, setLoading] = useState<boolean>(true);
 
     function fetchResult() {
         const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/results" : "/results"
         //TODO
+        console.log("Sending out")
+        console.log(JSON.stringify({questionnaire, acceptedMeals}))
         fetch(URL, {
             method: 'post',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(acceptedMeals)
+            body: JSON.stringify({questionnaire, acceptedMeals})
         })
         .then(res => res.json())
         .then(data => {
             console.log(data)
-            setResult(data)
+            setResult(data as Result)
         })
+        .finally(() => setLoading(false))
     }
 
     useEffect(() => {
         fetchResult()
     }, [])
 
+    if (loading) return <div>Loading...</div>
+
+    if (!result) return <div>Failed to get result</div>
+
+    console.log(result)
+
     return (
         <div className="flex flex-col gap-5 mb-20">
             <h1 className="text-4xl text-mm-text my-10">Meal Plans</h1>
             <div className="flex flex-col gap-20">
                 {result?.mealPlans.map((mealPlan, index) => {
+                    console.log(mealPlan)
                     const fullNutrition = {
-                        calories: mealPlan.breakfast.nutrition.calories + mealPlan.lunch.nutrition.calories + mealPlan.snack.nutrition.calories + mealPlan.dinner.nutrition.calories,
-                        protein: mealPlan.breakfast.nutrition.protein + mealPlan.lunch.nutrition.protein + mealPlan.snack.nutrition.protein + mealPlan.dinner.nutrition.protein,
-                        carbs: mealPlan.breakfast.nutrition.carbs + mealPlan.lunch.nutrition.carbs + mealPlan.snack.nutrition.carbs + mealPlan.dinner.nutrition.carbs,
-                        fat: mealPlan.breakfast.nutrition.fat + mealPlan.lunch.nutrition.fat + mealPlan.snack.nutrition.fat + mealPlan.dinner.nutrition.fat,
+                        calories: mealPlan.meals[0].calories + mealPlan.meals[1].calories + mealPlan.meals[2].calories + mealPlan.meals[3].calories,
+                        protein: mealPlan.meals[0].protein + mealPlan.meals[1].protein + mealPlan.meals[2].protein + mealPlan.meals[3].protein,
+                        carbs: mealPlan.meals[0].carbs + mealPlan.meals[1].carbs + mealPlan.meals[2].carbs + mealPlan.meals[3].carbs,
+                        fat: mealPlan.meals[0].fat + mealPlan.meals[1].fat + mealPlan.meals[2].fat + mealPlan.meals[3].fat,
                     }
 
                     return (
@@ -68,10 +80,10 @@ function ResultStep() {
                                 <th className="text-mm-text">Fat</th>
                             </thead>
                             <tbody>
-                                <MealRow meal={mealPlan.breakfast} />
-                                <MealRow meal={mealPlan.lunch} />
-                                <MealRow meal={mealPlan.snack} />
-                                <MealRow meal={mealPlan.dinner} />
+                                <MealRow meal={mealPlan.meals[0]} />
+                                <MealRow meal={mealPlan.meals[1]} />
+                                <MealRow meal={mealPlan.meals[2]} />
+                                <MealRow meal={mealPlan.meals[3]} />
 
                                 <tr className="">
                                     <td className=" text-yellow-600">Total</td>
@@ -119,12 +131,12 @@ function MealRow({meal}: {meal: Meal}) {
         <>
         {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
         <tr className="text-wrap">
-            <td className="text-mm-text capitalize">{meal.type}</td>
+            <td className="text-mm-text capitalize">{meal.dishTypes}</td>
             <td><button onClick={() => setOpen(true)} className="cursor-pointer underline">{meal.title}</button></td>
-            <td>{meal.nutrition.calories} kcal</td>
-            <td>{meal.nutrition.carbs}g</td>
-            <td>{meal.nutrition.protein}g</td>
-            <td>{meal.nutrition.fat}g</td>
+            <td>{meal.calories} kcal</td>
+            <td>{meal.carbs}g</td>
+            <td>{meal.protein}g</td>
+            <td>{meal.fat}g</td>
         </tr>
         </>
     )

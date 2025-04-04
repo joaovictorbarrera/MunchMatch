@@ -6,16 +6,17 @@ import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
 export interface Meal {
-    imageUrl: string,
+    image: string,
     title: string,
-    type: "breakfast" | "lunch" | "snack" | "dinner",
-    nutrition: {
-        calories: number,
-        protein: number,
-        carbs: number,
-        fat: number
-    },
-    mealID: number
+    dishTypes: string,
+    calories: number,
+    protein: number,
+    carbs: number,
+    fat: number,
+    id: number,
+    vegetarian: boolean,
+    gluten: boolean,
+    dairy: boolean
 }
 
 function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage: () => void, handlePreviousPage: () => void}) {
@@ -26,6 +27,8 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
 
     const {acceptedMeals, setAcceptedMeals} = useContext(AcceptedMealContext)
     const [seenMeals, setSeenMeals] = useState<number[]>([]);
+
+    const [loading, setLoading] = useState<boolean>(true);
 
     const MIN_MEALS_TO_PROGRESS = 20
     let offset = 0
@@ -44,23 +47,12 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
         .then(data => {
             console.log(data)
             data = data.map((meal: any) => {
-                console.log(meal)
-                let formattedMeal: Meal = {
-                    imageUrl: meal.image,
-                    title: meal.title,
-                    nutrition: {
-                        calories: meal.calories,
-                        protein: meal.protein,
-                        carbs: meal.carbs,
-                        fat: meal.fat
-                    },
-                    mealID: meal.id,
-                    type: meal.dishTypes
-                }
-                return formattedMeal
+
+                return meal as Meal
             })
             setMealData(oldData => [...oldData, ...data])
         })
+        .finally(() => setLoading(false))
     }
 
     useEffect(() => {
@@ -77,12 +69,12 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
 
     function handleReject() {
         nextDish()
-        setSeenMeals(arr => [...arr, mealData[currentDishIndex].mealID])
+        setSeenMeals(arr => [...arr, mealData[currentDishIndex].id])
     }
 
     function handleAccept() {
         nextDish()
-        setSeenMeals(arr => [...arr, mealData[currentDishIndex].mealID])
+        setSeenMeals(arr => [...arr, mealData[currentDishIndex].id])
         setAcceptedMeals(arr => [...arr, mealData[currentDishIndex]])
     }
 
@@ -90,6 +82,8 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
         // TODO
         handleNextPage()
     }
+
+    if (loading) return <div>Loading...</div>
 
     if (currentDishIndex >= mealData.length) return <div>
         <p>No meal data available</p>
@@ -159,7 +153,7 @@ interface MealCardProps {
 function MealCard({mealData, currentDishIndex, handleAccept, handleReject, handleGetResults, acceptedMealsLength}: MealCardProps) {
     return (
         <div className="flex flex-col xl:flex-row xl:gap-10 gap-4 items-center">
-            <img className="bg-black w-[400px] aspect-square object-cover" src={mealData[currentDishIndex].imageUrl} alt="" />
+            <img className="bg-black w-[400px] aspect-square object-cover" src={mealData[currentDishIndex].image} alt="" />
 
             <div className="xl:hidden flex gap-5">
                 <button onClick={handleReject} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
@@ -189,13 +183,13 @@ function MealCard({mealData, currentDishIndex, handleAccept, handleReject, handl
 
             <header className="px-5 flex flex-col gap-5 flex-1 text-lg xl:text-xl items-start text-center w-full">
                 <h1 className="text-2xl xl:text-4xl text-mm-text">{mealData[currentDishIndex].title}</h1>
-                <span className="bg-mm-secondary p-3 rounded-xl text-mm-text font-bold">{mealData[currentDishIndex].nutrition.calories} calories</span>
+                <span className="bg-mm-secondary p-3 rounded-xl text-mm-text font-bold">{mealData[currentDishIndex].calories} calories</span>
                 <hr className="w-full bg-mm-text h-[1px]" />
                 <div className="flex flex-col gap-3">
                     <h2 className="font-bold">Nutrition:</h2>
-                    <p>Protein: {mealData[currentDishIndex].nutrition.protein}g</p>
-                    <p>Carbs: {mealData[currentDishIndex].nutrition.carbs}g</p>
-                    <p>Fat: {mealData[currentDishIndex].nutrition.fat}g</p>
+                    <p>Protein: {mealData[currentDishIndex].protein}g</p>
+                    <p>Carbs: {mealData[currentDishIndex].carbs}g</p>
+                    <p>Fat: {mealData[currentDishIndex].fat}g</p>
                 </div>
             </header>
         </div>
