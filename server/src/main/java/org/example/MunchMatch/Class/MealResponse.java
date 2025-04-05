@@ -1,15 +1,41 @@
 package org.example.MunchMatch.Class;
+import org.example.MunchMatch.API.SpoonacularMeal;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MealResponse {
-    private List<Meal> results;
+    private List<SpoonacularMeal> results;
 
+    private static List<Meal> formatResults(List<SpoonacularMeal> results) {
+        List<Meal> meals = new ArrayList<>();
+        for (SpoonacularMeal snMeal : results) {
+            Meal meal = new Meal();
+            meal.setTitle(snMeal.getTitle());
+            meal.setImage(snMeal.getImage());
+            meal.setVegetarian(snMeal.isVegetarian());
+            meal.setGluten(!snMeal.isGlutenFree());
+            meal.setDairy(!snMeal.isDairyFree());
+            meal.setDishTypes(snMeal.getDishTypes());
 
-    public List<Meal> getResults() {
-        return results;
+            SpoonacularMeal.SpoonacularNutrition nutrition = snMeal.getNutrition();
+            for (SpoonacularMeal.SpoonacularNutrient nutrient : nutrition.getNutrients()) {
+                if (nutrient.getName().equals("Calories")) meal.setCalories(nutrient.getAmount());
+                if (nutrient.getName().equals("Fat")) meal.setFat(nutrient.getAmount());
+                if (nutrient.getName().equals("Carbohydrates")) meal.setCarbs(nutrient.getAmount());
+                if (nutrient.getName().equals("Protein")) meal.setProtein(nutrient.getAmount());
+            }
+
+            meals.add(meal);
+        }
+        return meals;
     }
 
-    public void setResults(List<Meal> results) {
+    public List<Meal> getResults() {
+        return MealResponse.formatResults(this.results);
+    }
+
+    public void setResults(List<SpoonacularMeal> results) {
         this.results = results;
     }
 

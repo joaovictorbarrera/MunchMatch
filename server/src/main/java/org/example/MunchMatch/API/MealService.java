@@ -26,7 +26,8 @@ public class MealService {
     
     public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes, int number, int offset) {
         if(API_KEY.equals("api")){
-        System.out.println("ADD API KAY");
+            System.out.println("NO API KEY WAS FOUND. SHUTTING DOWN.");
+            System.exit(0);
         }
 
         List<String> intolerances = new ArrayList<>();
@@ -43,6 +44,7 @@ public class MealService {
                 .queryParam("dishTypes", String.join(",", dishTypes))
                 .queryParam("number", 100)  // Always request 100 meals
                 .queryParam("offset", 0)
+                .queryParam("addRecipeNutrition", true)
                 .queryParam("apiKey", API_KEY)
                 .toUriString();
 

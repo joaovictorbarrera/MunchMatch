@@ -8,7 +8,7 @@ import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 export interface Meal {
     image: string,
     title: string,
-    dishTypes: string,
+    dishTypes: string[],
     calories: number,
     protein: number,
     carbs: number,

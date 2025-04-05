@@ -2,6 +2,7 @@ package org.example.MunchMatch.Class;
 
 import jakarta.persistence.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ public class Meal {
     private boolean vegetarian;
     private boolean gluten;
     private boolean dairy;
-    private String dishTypes;
+    private List<String> dishTypes;
 
     @Column(name = "mealPlanId")
    private Long mealPlanId;
@@ -27,7 +28,7 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(Long id, String title, double calories, double carbs, double fat, double protein, String image, String imageType, boolean vegetarian, boolean gluten, boolean dairy, String dishTypes) {
+    public Meal(Long id, String title, double calories, double carbs, double fat, double protein, String image, String imageType, boolean vegetarian, boolean gluten, boolean dairy, List<String> dishTypes) {
         this.id = id;
         this.title = title;
         this.calories = calories;
@@ -43,6 +44,8 @@ public class Meal {
 
     public <T> Meal(List<T> ts) {
     }
+
+
 
 
     // Getters and setters for all fields
@@ -66,8 +69,8 @@ public class Meal {
     public void setGluten(boolean gluten) { this.gluten = gluten; }
     public boolean isDairy() { return dairy; }
     public void setDairy(boolean dairy) { this.dairy = dairy; }
-    public String getDishTypes() {return dishTypes;}
-    public void setDishTypes(String diets) {this.dishTypes = dishTypes;}
+    public List<String> getDishTypes() {return dishTypes;}
+    public void setDishTypes(List<String> dishTypes) {this.dishTypes = dishTypes;}
 
     @Override
     public String toString() {

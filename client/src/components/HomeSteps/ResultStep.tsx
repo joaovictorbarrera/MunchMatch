@@ -131,7 +131,7 @@ function MealRow({meal}: {meal: Meal}) {
         <>
         {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
         <tr className="text-wrap">
-            <td className="text-mm-text capitalize">{meal.dishTypes}</td>
+            <td className="text-mm-text capitalize">{meal.dishTypes?.[0]}</td>
             <td><button onClick={() => setOpen(true)} className="cursor-pointer underline">{meal.title}</button></td>
             <td>{meal.calories} kcal</td>
             <td>{meal.carbs}g</td>
