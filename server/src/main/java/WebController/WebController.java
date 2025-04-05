@@ -8,7 +8,6 @@ import org.example.MunchMatch.Repository.UserRepository;
 import org.example.MunchMatch.Repository.ResultRepository;
 import org.example.MunchMatch.Repository.MealPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,17 +36,10 @@ public class WebController {
     MealPlanRepository repositoryMealPlan;
 
     private final MealService mealService;
-
     @Autowired
     public WebController(MealService mealService) {
         this.mealService = mealService;
     }
-
-//    @GetMapping("/")
-//    public String indexPage(Model model) {
-//        model.addAttribute("userForm", new User());
-//        return "index";
-//    }
 
     @PostMapping("/success")
     public String successPage(@ModelAttribute User user, Model model) {

@@ -55,4 +55,13 @@ public class MealPlan {
     public void setResultId(Long resultId) {
         this.resultId = resultId;
     }
+
+    @Override
+    public String toString() {
+        return "MealPlan{" +
+                "mealPlanId=" + mealPlanId +
+                ", meals=" + meals +
+                ", resultId=" + resultId +
+                '}';
+    }
 }
