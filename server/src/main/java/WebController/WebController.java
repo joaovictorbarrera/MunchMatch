@@ -43,11 +43,11 @@ public class WebController {
         this.mealService = mealService;
     }
 
-    @GetMapping("/")
-    public String indexPage(Model model) {
-        model.addAttribute("userForm", new User());
-        return "index";
-    }
+//    @GetMapping("/")
+//    public String indexPage(Model model) {
+//        model.addAttribute("userForm", new User());
+//        return "index";
+//    }
 
     @PostMapping("/success")
     public String successPage(@ModelAttribute User user, Model model) {

@@ -15,7 +15,7 @@ public class MealService {
 
     @Value("${spoonacular.api.url}")
     private String API_URL;
-    @Value("${API_KEY}")
+    @Value("${api_key}")
     private String API_KEY;
 
     private final RestTemplate restTemplate;
