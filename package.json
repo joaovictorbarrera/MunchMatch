@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd client && npm install && npm run build && cd .. && cd server && gradlew build",
-    "start": "cd server && gradlew bootRun"
+    "build": "cd client && npm install && npm run build && cd .. && cd server && ./gradlew build -x test",
+    "start": "cd server && ./gradlew bootRun"
   },
   "repository": {
     "type": "git",

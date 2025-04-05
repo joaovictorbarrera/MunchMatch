@@ -25,9 +25,6 @@ function ResultStep() {
 
     function fetchResult() {
         const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/results" : "/results"
-        //TODO
-        console.log("Sending out")
-        console.log(JSON.stringify({questionnaire, acceptedMeals}))
         fetch(URL, {
             method: 'post',
             headers: {
@@ -51,14 +48,11 @@ function ResultStep() {
 
     if (!result) return <div>Failed to get result</div>
 
-    console.log(result)
-
     return (
-        <div className="flex flex-col gap-5 mb-20">
+        <div className="flex flex-col gap-5 mb-20 p-5">
             <h1 className="text-4xl text-mm-text my-10">Meal Plans</h1>
             <div className="flex flex-col gap-20">
                 {result?.mealPlans.map((mealPlan, index) => {
-                    console.log(mealPlan)
                     const fullNutrition = {
                         calories: mealPlan.meals[0].calories + mealPlan.meals[1].calories + mealPlan.meals[2].calories + mealPlan.meals[3].calories,
                         protein: mealPlan.meals[0].protein + mealPlan.meals[1].protein + mealPlan.meals[2].protein + mealPlan.meals[3].protein,
@@ -70,7 +64,15 @@ function ResultStep() {
                     <div key={JSON.stringify(mealPlan)} className="flex flex-col gap-10 mb-10">
                         <h2 className="text-mm-text text-3xl" >Option {index+1}</h2>
 
-                        <table className="text-nowrap resultTable">
+                        <div className="md:hidden flex flex-col gap-5">
+                            <MealCard meal={mealPlan.meals[0]} />
+                            <MealCard meal={mealPlan.meals[1]} />
+                            <MealCard meal={mealPlan.meals[2]} />
+                            <MealCard meal={mealPlan.meals[3]} />
+                            <Total fullNutrition={fullNutrition} />
+                        </div>
+
+                        <table className="md:table hidden text-nowrap resultTable">
                             <thead>
                                 <th className="!border-none"></th>
                                 <th className="text-start text-mm-text">Dish</th>
@@ -121,6 +123,38 @@ function ResultButtons() {
             <button onClick={() => setEmailModalOpen(true)} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">Send to email</button>
             {emailModalOpen && <EmailModal setOpen={setEmailModalOpen} />}
         </div>
+    )
+}
+
+function Total({fullNutrition}: {fullNutrition: {calories: number, fat: number, protein:number, carbs:number}}) {
+    return (
+        <div className="bg-mm-text text-mm-bg border-black border-2 rounded-xl p-5 flex flex-col text-lg gap-2">
+            <strong className="underline">{fullNutrition.calories} Calories Total</strong>
+            <div className="flex gap-3 text-black">
+                <span className="bg-mm-secondary p-2 rounded-xl">Protein: {fullNutrition.protein}g</span>
+                <span className="bg-mm-secondary p-2 rounded-xl">Carbs: {fullNutrition.carbs}g</span>
+                <span className="bg-mm-secondary p-2 rounded-xl">Fat: {fullNutrition.fat}g</span>
+            </div>
+        </div>
+    )
+}
+
+function MealCard({meal}: {meal: Meal}) {
+    const [modalOpen, setOpen] = useState<boolean>(false);
+
+    return (
+        <>
+        {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
+        <div onClick={() => setOpen(true)} className="bg-mm-primary border-mm-text border-2 rounded-xl p-5 flex flex-col text-lg gap-2">
+            <strong>{meal.title}</strong>
+            <div className="flex gap-3 text-mm-text">
+                <span className="bg-mm-secondary p-2 rounded-xl">Protein: {meal.protein}g</span>
+                <span className="bg-mm-secondary p-2 rounded-xl">Carbs: {meal.carbs}g</span>
+                <span className="bg-mm-secondary p-2 rounded-xl">Fat: {meal.fat}g</span>
+            </div>
+            <span className="bg-mm-text text-mm-bg p-2 rounded-xl w-fit">Calories: {meal.calories} kcal</span>
+        </div>
+        </>
     )
 }
 

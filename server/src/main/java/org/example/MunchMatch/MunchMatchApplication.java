@@ -11,9 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"WebController", "org.example.MunchMatch.API"})
 public class MunchMatchApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MunchMatchApplication.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(MunchMatchApplication.class, args); }
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
