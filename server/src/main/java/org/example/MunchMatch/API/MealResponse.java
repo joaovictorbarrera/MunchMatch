@@ -1,5 +1,5 @@
-package org.example.MunchMatch.Class;
-import org.example.MunchMatch.API.SpoonacularMeal;
+package org.example.MunchMatch.API;
+import org.example.MunchMatch.Class.Meal;
 
 import java.util.ArrayList;
 import java.util.List;

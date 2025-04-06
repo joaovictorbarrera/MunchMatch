@@ -1,5 +1,7 @@
-package org.example.MunchMatch.Class;
+package org.example.MunchMatch.API;
 import jakarta.persistence.*;
+import org.example.MunchMatch.Class.MealPlan;
+
 import java.util.List;
 
 @Entity

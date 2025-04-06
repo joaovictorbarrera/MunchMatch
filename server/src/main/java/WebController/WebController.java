@@ -1,8 +1,10 @@
 package WebController;
 
-import org.example.MunchMatch.API.MealService;
+import org.example.MunchMatch.API.*;
 import org.example.MunchMatch.Class.*;
 
+import org.example.MunchMatch.Engine.MealPlanGenerator;
+import org.example.MunchMatch.Engine.Target;
 import org.example.MunchMatch.Mock.MockResultData;
 import org.example.MunchMatch.Repository.UserRepository;
 import org.example.MunchMatch.Repository.ResultRepository;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,7 @@ public class WebController {
             @RequestParam (required = false) String dishTypes,
             @RequestParam int number,
             @RequestParam int offset) {
-        return mealService.getMeals(title, calories, carbs, fat, protein, vegetarian, gluten, dairy, dishTypes, number, offset);
+        return mealService.getMeals(title, new Target(calories, protein, carbs, fat), vegetarian, gluten, dairy, dishTypes, number, offset);
     }
 
     @PostMapping("/suggestions")
@@ -76,16 +77,14 @@ public class WebController {
         List<Integer> seenMeals = request.getSeenMeals();
 
         // Destructure preferences from the questionnaire
-        int preferredCalories = questionnaire.getCalories();
-        int preferredProtein = questionnaire.getNutrition().getProtein() >= 0 ? questionnaire.getNutrition().getProtein() : 1000; // Default to 0
-        int preferredCarbs = questionnaire.getNutrition().getCarbs() >= 0 ? questionnaire.getNutrition().getCarbs() : 1000; // Default to 0
-        int preferredFat = questionnaire.getNutrition().getFat() >= 0 ? questionnaire.getNutrition().getFat() : 1000; // Default to 0
+        Target target = new Target(questionnaire);
+
         boolean lactoseFree = questionnaire.getRestrictions().isLactoseFree();
         boolean glutenFree = questionnaire.getRestrictions().isGlutenFree();
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
 
         // Get meals from mealService based on the user's preferences
-        List<Meal> meals = mealService.getMeals("", preferredCalories, preferredCarbs, preferredFat, preferredProtein, vegetarian, glutenFree, lactoseFree, "", number, offset).getResults();
+        List<Meal> meals = mealService.getMeals("", target, vegetarian, glutenFree, lactoseFree, "", number, offset).getResults();
 
         // Apply filtering on the list of meals based on seen meals
         return meals.stream()
@@ -99,9 +98,24 @@ public class WebController {
     @PostMapping("/results")
     public ResultResponse createMealPlan(@RequestBody ResultRequest request) {
         // ResponseEntity<ResultResponse>
-//        return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
+        // return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
         System.out.println(request);
-        return MockResultData.makeData(request.getAcceptedMeals());
+
+        Target target = new Target(request.getQuestionnaire());
+
+        // Step 1: Generate Meal Plans
+        List<MealPlan> mealPlans = MealPlanGenerator.generateMealPlans(request.getAcceptedMeals(), target);
+
+        // Step 2: Save Meal Plan to Database, get resultId
+        // long resultId = DatabaseService.saveResult(mealPlans);
+
+        // Step 3: Create Result Response
+        // ResultResponse response = new ResultResponse(resultId, mealPlans);
+
+        // Step 4: return the created results
+        // return response;
+
+        return MockResultData.makeFakeResponse(mealPlans);
     }
 
 }

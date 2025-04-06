@@ -2,6 +2,7 @@ package org.example.MunchMatch.Class;
 
 import jakarta.persistence.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,8 @@ public class MealPlan {
     @Column(name="resultId")
     private Long resultId;
 
+    private Long score;
+
     public MealPlan() {
     }
 
@@ -30,6 +33,14 @@ public class MealPlan {
         this.mealPlanId = mealPlanId;
         this.meals = meals;
         this.resultId = resultId;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
     }
 
     public Long getMealPlanId() {
@@ -62,6 +73,7 @@ public class MealPlan {
                 "mealPlanId=" + mealPlanId +
                 ", meals=" + meals +
                 ", resultId=" + resultId +
+                ", score=" + score +
                 '}';
     }
 }

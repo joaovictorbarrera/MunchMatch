@@ -8,7 +8,8 @@ import EmailModal from "./Modals/EmailModal";
 export interface MealPlan {
     mealPlanID: number,
     meals: Meal[],
-    resultId: number
+    resultId: number,
+    score: number
 }
 
 export interface Result {

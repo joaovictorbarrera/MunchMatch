@@ -1,7 +1,6 @@
 package org.example.MunchMatch.API;
 
-import org.example.MunchMatch.Class.Meal;
-import org.example.MunchMatch.Class.MealResponse;
+import org.example.MunchMatch.Engine.Target;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +23,7 @@ public class MealService {
         this.restTemplate = restTemplate;
     }
     
-    public MealResponse getMeals(String title, double calories, double carbs, double fat, double protein, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes, int number, int offset) {
+    public MealResponse getMeals(String title, Target target, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes, int number, int offset) {
         if(API_KEY.equals("api")){
             System.out.println("NO API KEY WAS FOUND. SHUTTING DOWN.");
             System.exit(0);
@@ -35,10 +34,10 @@ public class MealService {
         if (dairy != null && dairy) intolerances.add("dairy");
         String url = UriComponentsBuilder.fromHttpUrl(API_URL)
                 .queryParam("query", title)
-                .queryParam("maxCalories", calories)
-                .queryParam("maxCarbs", carbs)
-                .queryParam("maxFat", fat)
-                .queryParam("maxProtein", protein)
+                .queryParam("maxCalories", target.getTargetCalories())
+                .queryParam("maxCarbs", target.getTargetCarbs() == null ? 1000 : target.getTargetCarbs())
+                .queryParam("maxFat", target.getTargetFat() == null ? 1000 : target.getTargetFat())
+                .queryParam("maxProtein", target.getTargetProtein() == null ? 1000 : target.getTargetProtein())
                 .queryParam("diet", vegetarian != null && vegetarian ? "vegetarian" : "")
                 .queryParam("intolerances", String.join(",", intolerances))
                 .queryParam("dishTypes", String.join(",", dishTypes))

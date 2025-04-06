@@ -1,15 +1,15 @@
 package org.example.MunchMatch.Class;
 
 public class Questionnaire {
-    private int calories;
+    private double calories;
     private Nutrition nutrition;
     private Restrictions restrictions;
 
-    public int getCalories() {
+    public double getCalories() {
         return calories;
     }
 
-    public void setCalories(int calories) {
+    public void setCalories(double calories) {
         this.calories = calories;
     }
 
@@ -39,33 +39,33 @@ public class Questionnaire {
     }
 
     public static class Nutrition {
-        private Integer protein;
-        private Integer carbs;
-        private Integer fat;
+        private Double protein;
+        private Double carbs;
+        private Double fat;
 
         // Getters and Setters
 
-        public Integer getProtein() {
+        public Double getProtein() {
             return protein;
         }
 
-        public void setProtein(Integer protein) {
+        public void setProtein(Double protein) {
             this.protein = protein;
         }
 
-        public Integer getCarbs() {
+        public Double getCarbs() {
             return carbs;
         }
 
-        public void setCarbs(Integer carbs) {
+        public void setCarbs(Double carbs) {
             this.carbs = carbs;
         }
 
-        public Integer getFat() {
+        public Double getFat() {
             return fat;
         }
 
-        public void setFat(Integer fat) {
+        public void setFat(Double fat) {
             this.fat = fat;
         }
 
