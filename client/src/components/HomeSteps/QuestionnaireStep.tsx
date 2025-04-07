@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { QuestionnaireContext } from "../../contexts/QuestionnaireContext";
 import Calories from "../Questionnaire/Calories";
 import Intro from "../Questionnaire/Intro";

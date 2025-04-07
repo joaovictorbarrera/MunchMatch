@@ -6,7 +6,6 @@ import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { MdOutlineArrowBack, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { MealDataContext } from "../../contexts/MealDataContext";
 import isReadyToProcessResult from "../../extra/isReadyToProcessResult";
-import { IoMdArrowRoundBack } from "react-icons/io";
 
 export interface Meal {
     image: string,
@@ -23,7 +22,6 @@ export interface Meal {
 }
 
 const MIN_MEALS_TO_PROGRESS = 30
-const MIN_OF_EACH_TYPE = 8
 
 function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage: () => void, handlePreviousPage: () => void}) {
 
