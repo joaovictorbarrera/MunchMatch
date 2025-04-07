@@ -6,8 +6,7 @@ import Nutrition from "../Questionnaire/Nutrition";
 import Restrictions from "../Questionnaire/Restrictions";
 import Confirmation from "../Questionnaire/Confirmation";
 
-function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
-    const [step, setStep] = useState<number>(0);
+function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setStep: React.Dispatch<React.SetStateAction<number>>, handleNextPage: () => void}) {
     const MAX_STEPS = 4
 
     function handleBack() {
@@ -31,6 +30,14 @@ function QuestionnaireStep({handleNextPage}: {handleNextPage: () => void}) {
         [3, <Restrictions />],
         [4, <Confirmation />]
     ])
+
+    // const enterListenHandler = (e: any) => {
+    //     if (e.key === "Enter") {
+    //       window.alert("Enter key pressed!");
+    //       // Do something with the entered text
+
+    //     }
+    //   };
 
     return (
         <div className="w-full p-5 py-10 border-b-2 flex flex-col gap-30 border-mm-text">
@@ -59,6 +66,11 @@ interface NavigationProps {
 function Navigation({step, handleBack, handleNext, handleNextPage}: NavigationProps) {
     const {questionnaire,} = useContext(QuestionnaireContext)
 
+      function progress() {
+        if(step == 4) handleNextPage()
+        else handleNext()
+      }
+
     return (
     <div className="inline-flex">
         {step > 1 ?
@@ -66,7 +78,7 @@ function Navigation({step, handleBack, handleNext, handleNextPage}: NavigationPr
             Back
         </button> :
         null}
-        <button onClick={step == 4 ? handleNextPage : handleNext} disabled={questionnaire.calories == -1} className="cursor-pointer bg-mm-primary hover:brightness-90 text-mm-text border-[1px] border-mm-text py-2 px-10 disabled:border-0 disabled:text-gray-400 disabled:bg-gray-300 disabled:hover:bg-auto disabled:cursor-auto">
+        <button onClick={progress} disabled={questionnaire.calories == -1} className="cursor-pointer bg-mm-primary hover:brightness-90 text-mm-text border-[1px] border-mm-text py-2 px-10 disabled:border-0 disabled:text-gray-400 disabled:bg-gray-300 disabled:hover:bg-auto disabled:cursor-auto">
             Next
         </button>
     </div>

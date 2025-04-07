@@ -12,7 +12,7 @@ function Intro({handleNext}: {handleNext: () => void}) {
     const text = {
         personalProfile: {
             title: "Personal Profile",
-            description: "Set your dieatery preferences, restrictions, and daily calorie goals."
+            description: "Set your dietary preferences, restrictions, and daily calorie goals."
         },
         smartSuggestions: {
             title: "Smart Suggestions",
