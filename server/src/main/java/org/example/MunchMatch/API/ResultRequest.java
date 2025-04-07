@@ -1,4 +1,7 @@
-package org.example.MunchMatch.Class;
+package org.example.MunchMatch.API;
+import org.example.MunchMatch.Class.Meal;
+import org.example.MunchMatch.Class.Questionnaire;
+
 import java.util.List;
 public class ResultRequest {
     Questionnaire questionnaire;

@@ -1,5 +1,5 @@
-package org.example.MunchMatch.Class;
-import org.example.MunchMatch.API.SpoonacularMeal;
+package org.example.MunchMatch.API;
+import org.example.MunchMatch.Class.Meal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ public class MealResponse {
         List<Meal> meals = new ArrayList<>();
         for (SpoonacularMeal snMeal : results) {
             Meal meal = new Meal();
+            meal.setId(snMeal.getId());
             meal.setTitle(snMeal.getTitle());
             meal.setImage(snMeal.getImage());
             meal.setVegetarian(snMeal.isVegetarian());

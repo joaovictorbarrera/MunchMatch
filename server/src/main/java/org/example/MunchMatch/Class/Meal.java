@@ -2,7 +2,6 @@ package org.example.MunchMatch.Class;
 
 import jakarta.persistence.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -10,7 +9,7 @@ import java.util.List;
 @Table (name= "meal")
 public class Meal {
     @Id
-    @GeneratedValue private Long id;
+    private int id;
     private String title;
     private double calories;
     private double carbs;
@@ -28,7 +27,7 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(Long id, String title, double calories, double carbs, double fat, double protein, String image, String imageType, boolean vegetarian, boolean gluten, boolean dairy, List<String> dishTypes) {
+    public Meal(int id, String title, double calories, double carbs, double fat, double protein, String image, String imageType, boolean vegetarian, boolean gluten, boolean dairy, List<String> dishTypes) {
         this.id = id;
         this.title = title;
         this.calories = calories;
@@ -49,8 +48,8 @@ public class Meal {
 
 
     // Getters and setters for all fields
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public double getCalories() { return calories; }

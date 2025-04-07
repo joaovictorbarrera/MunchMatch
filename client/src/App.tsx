@@ -8,6 +8,7 @@ import Home from './components/HomeSteps/Home';
 import About from './components/ExtraPages/About';
 import Contact from './components/ExtraPages/Contact';
 import Mission from './components/ExtraPages/Mission';
+import { MealDataContext } from './contexts/MealDataContext';
 
 
 function App() {
@@ -25,6 +26,9 @@ function Window() {
   const [page, setPage] = useState<number>(1)
   const [homePage, setHomePage] = useState<number>(1)
 
+  const [currentMealIndex, setCurrentMealIndex] = useState<number>(0);
+  const [mealData, setMealData] = useState<Meal[]>([])
+
   const pageComponents = new Map(
     [
         [1, <Home page={homePage} setPage={setHomePage} />],
@@ -41,7 +45,9 @@ function Window() {
       <main className='text-xl flex pt-5'>
         <QuestionnaireContext.Provider value={{questionnaire, setQuestionnaire}}>
           <AcceptedMealContext.Provider value={{acceptedMeals, setAcceptedMeals}}>
-            {pageComponents.get(page)}
+            <MealDataContext.Provider value={{mealData, setMealData, currentMealIndex, setCurrentMealIndex}}>
+              {pageComponents.get(page)}
+            </MealDataContext.Provider>
           </AcceptedMealContext.Provider>
         </QuestionnaireContext.Provider>
       </main>

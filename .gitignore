@@ -48,7 +48,6 @@ out/
 
 ### VS Code ###
 .vscode/
-application.properties
 
 
 # Editor directories and files
@@ -63,3 +62,4 @@ application.properties
 *.sw?
 *.env
 mock-server
+static

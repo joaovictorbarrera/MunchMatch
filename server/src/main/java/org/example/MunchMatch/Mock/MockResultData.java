@@ -2,14 +2,14 @@ package org.example.MunchMatch.Mock;
 
 import org.example.MunchMatch.Class.Meal;
 import org.example.MunchMatch.Class.MealPlan;
-import org.example.MunchMatch.Class.ResultResponse;
+import org.example.MunchMatch.API.ResultResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MockResultData {
-    public static ResultResponse makeData(List<Meal> acceptedMeals) {
-        final long mockResultID = 999;
+    private static final long mockResultID = 999;
+    public static List<MealPlan> makeData(List<Meal> acceptedMeals) {
         List<MealPlan> mealPlans = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
@@ -27,6 +27,10 @@ public class MockResultData {
         System.out.println("Mock Result Generated:");
         System.out.println(mealPlans);
 
+        return mealPlans;
+    }
+
+    public static ResultResponse makeFakeResponse(List<MealPlan> mealPlans) {
         return new ResultResponse(mockResultID, mealPlans);
     }
 }

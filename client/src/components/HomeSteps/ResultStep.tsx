@@ -1,27 +1,33 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { Meal } from "./MealSelectionStep"
 import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { defaultQuestionnaire, QuestionnaireContext } from "../../contexts/QuestionnaireContext";
 import MealModal from "./Modals/MealModal";
 import EmailModal from "./Modals/EmailModal";
+import { MdOutlineArrowBack } from "react-icons/md";
+import { MealDataContext } from "../../contexts/MealDataContext";
 
 export interface MealPlan {
     mealPlanID: number,
     meals: Meal[],
-    resultId: number
+    resultId: number,
+    score: number,
+    bestScoreCategory: string
 }
 
 export interface Result {
-    resultID: number,
+    id: number,
     mealPlans: MealPlan[]
 }
 
-function ResultStep() {
+function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
     const {questionnaire,} = useContext(QuestionnaireContext)
     const {acceptedMeals} = useContext(AcceptedMealContext)
 
     const [result, setResult] = useState<Result>();
     const [loading, setLoading] = useState<boolean>(true);
+
+    const hasFetched = useRef(false);
 
     function fetchResult() {
         const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/results" : "/results"
@@ -41,17 +47,29 @@ function ResultStep() {
     }
 
     useEffect(() => {
-        fetchResult()
+        if (!hasFetched.current) {
+            fetchResult()
+            hasFetched.current = true
+        }
     }, [])
+
+    function scoreColor(score: number): string {
+        if (score >= 90) return "bg-green-900 text-green-500"
+        else if (score >= 80) return "bg-green-300 text-green-800"
+        else if (score >= 70) return "bg-yellow-500 text-yellow-100"
+        else return "bg-red-200 text-red-800"
+    }
 
     if (loading) return <div>Loading...</div>
 
-    if (!result) return <div>Failed to get result</div>
+    if (!result) return <div className="text-center">Failed to get result</div>
 
     return (
-        <div className="flex flex-col gap-5 mb-20 p-5">
+        <div className="flex flex-col mb-20 p-5 items-start">
+        <button className="text-mm-text bg-mm-primary py-2 px-5 rounded-lg w-fit cursor-pointer hover:brightness-90 flex items-center gap-2" onClick={handlePreviousPage}><MdOutlineArrowBack /> Back to Meal Selection</button>
             <h1 className="text-4xl text-mm-text my-10">Meal Plans</h1>
             <div className="flex flex-col gap-20">
+
                 {result?.mealPlans.map((mealPlan, index) => {
                     const fullNutrition = {
                         calories: mealPlan.meals[0].calories + mealPlan.meals[1].calories + mealPlan.meals[2].calories + mealPlan.meals[3].calories,
@@ -62,30 +80,38 @@ function ResultStep() {
 
                     return (
                     <div key={JSON.stringify(mealPlan)} className="flex flex-col gap-10 mb-10">
-                        <h2 className="text-mm-text text-3xl" >Option {index+1}</h2>
+                        <div className="flex gap-3 text-black items-center flex-wrap">
+                            <h2 className="text-mm-text text-3xl" >Option {index+1}</h2>
+                            <div className="flex gap-3">
+                                {mealPlan.score && <span className={`${scoreColor(mealPlan.score)} p-2 rounded-xl w-fit`}>{mealPlan.score}% Match</span>}
+                                {mealPlan.bestScoreCategory && <span className="bg-red-400 text-white p-2 rounded-xl w-fit capitalize">Best Match: {mealPlan.bestScoreCategory}</span>}
+                            </div>
+                        </div>
 
                         <div className="md:hidden flex flex-col gap-5">
-                            <MealCard meal={mealPlan.meals[0]} />
-                            <MealCard meal={mealPlan.meals[1]} />
-                            <MealCard meal={mealPlan.meals[2]} />
-                            <MealCard meal={mealPlan.meals[3]} />
+                            <MealCard meal={mealPlan.meals[0]} type="Breakfast" />
+                            <MealCard meal={mealPlan.meals[1]} type="Lunch" />
+                            <MealCard meal={mealPlan.meals[2]} type="Snack" />
+                            <MealCard meal={mealPlan.meals[3]} type="Dinner" />
                             <Total fullNutrition={fullNutrition} />
                         </div>
 
                         <table className="md:table hidden text-nowrap resultTable">
                             <thead>
-                                <th className="!border-none"></th>
-                                <th className="text-start text-mm-text">Dish</th>
-                                <th className="text-mm-text">Calories</th>
-                                <th className="text-mm-text">Carbs</th>
-                                <th className="text-mm-text">Protein</th>
-                                <th className="text-mm-text">Fat</th>
+                                <tr>
+                                    <th className="!border-none"></th>
+                                    <th className="text-start text-mm-text">Dish</th>
+                                    <th className="text-mm-text">Calories</th>
+                                    <th className="text-mm-text">Carbs</th>
+                                    <th className="text-mm-text">Protein</th>
+                                    <th className="text-mm-text">Fat</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <MealRow meal={mealPlan.meals[0]} />
-                                <MealRow meal={mealPlan.meals[1]} />
-                                <MealRow meal={mealPlan.meals[2]} />
-                                <MealRow meal={mealPlan.meals[3]} />
+                                <MealRow meal={mealPlan.meals[0]} type="Breakfast"/>
+                                <MealRow meal={mealPlan.meals[1]} type="Lunch"/>
+                                <MealRow meal={mealPlan.meals[2]} type="Snack"/>
+                                <MealRow meal={mealPlan.meals[3]} type="Dinner"/>
 
                                 <tr className="">
                                     <td className=" text-yellow-600">Total</td>
@@ -101,26 +127,37 @@ function ResultStep() {
                     )
                 })}
             </div>
-            <ResultButtons />
+            <ResultButtons resultId={result.id} />
         </div>
     )
 }
 
-function ResultButtons() {
+function ResultButtons({resultId}: {resultId: number}) {
     const {setAcceptedMeals} = useContext(AcceptedMealContext)
     const {setQuestionnaire} = useContext(QuestionnaireContext)
+    const {setMealData, setCurrentMealIndex} = useContext(MealDataContext)
     const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
+
+    const [linkCopyText, setLinkCopyText] = useState<string>("Copy Link")
 
     function clearAndStartOver() {
         setQuestionnaire(defaultQuestionnaire)
         setAcceptedMeals([])
+        setMealData([])
+        setCurrentMealIndex(0)
         window.location.reload()
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.origin + "?resultId=" + resultId);
+        setLinkCopyText("Link Copied!")
     }
 
     return (
         <div className="flex">
             <button onClick={clearAndStartOver} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">Start Over</button>
             <button onClick={() => setEmailModalOpen(true)} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">Send to email</button>
+            <button onClick={copyLink} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">{linkCopyText}</button>
             {emailModalOpen && <EmailModal setOpen={setEmailModalOpen} />}
         </div>
     )
@@ -139,13 +176,14 @@ function Total({fullNutrition}: {fullNutrition: {calories: number, fat: number, 
     )
 }
 
-function MealCard({meal}: {meal: Meal}) {
+function MealCard({meal, type}: {meal: Meal, type:string}) {
     const [modalOpen, setOpen] = useState<boolean>(false);
 
     return (
         <>
         {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
-        <div onClick={() => setOpen(true)} className="bg-mm-primary border-mm-text border-2 rounded-xl p-5 flex flex-col text-lg gap-2">
+        <div onClick={() => setOpen(true)} className="bg-mm-primary border-mm-text border-2 rounded-xl p-5 flex flex-col text-lg gap-2 cursor-pointer hover:brightness-90">
+            <span className="bg-red-400 text-white p-2 px-3 rounded-xl w-fit">{type}</span>
             <strong>{meal.title}</strong>
             <div className="flex gap-3 text-mm-text">
                 <span className="bg-mm-secondary p-2 rounded-xl">Protein: {meal.protein}g</span>
@@ -158,14 +196,14 @@ function MealCard({meal}: {meal: Meal}) {
     )
 }
 
-function MealRow({meal}: {meal: Meal}) {
+function MealRow({meal, type}: {meal: Meal, type:string}) {
     const [modalOpen, setOpen] = useState<boolean>(false);
 
     return (
         <>
         {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
         <tr className="text-wrap">
-            <td className="text-mm-text capitalize">{meal.dishTypes?.[0]}</td>
+            <td className="text-mm-text capitalize">{type}</td>
             <td><button onClick={() => setOpen(true)} className="cursor-pointer underline">{meal.title}</button></td>
             <td>{meal.calories} kcal</td>
             <td>{meal.carbs}g</td>

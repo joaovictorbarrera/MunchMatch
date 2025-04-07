@@ -1,13 +1,11 @@
 package org.example.MunchMatch.API;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SpoonacularMeal {
-    private Long id;
+    private int id;
     private String title;
     private String image;
-
     private boolean dairyFree;
     private boolean glutenFree;
     private boolean vegetarian;
@@ -15,10 +13,6 @@ public class SpoonacularMeal {
     private SpoonacularNutrition nutrition;
 
     private List<String> dishTypes;
-
-    public Long getId() {
-        return id;
-    }
 
     @Override
     public String toString() {
@@ -34,7 +28,11 @@ public class SpoonacularMeal {
                 '}';
     }
 
-    public void setId(Long id) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 

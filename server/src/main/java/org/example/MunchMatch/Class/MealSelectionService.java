@@ -1,4 +1,5 @@
 package org.example.MunchMatch.Class;
+import org.example.MunchMatch.API.ResultResponse;
 import org.example.MunchMatch.Repository.ResultRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
