@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Meal } from "../MealSelectionStep"
+import { Meal } from "../../MealSelectionStep"
 
 export default function MealModal({mealData, setOpen}: {mealData: Meal, setOpen: (cond:boolean) => void}) {
     useEffect(() => {

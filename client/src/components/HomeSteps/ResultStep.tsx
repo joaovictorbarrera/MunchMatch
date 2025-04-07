@@ -2,8 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { Meal } from "./MealSelectionStep"
 import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { defaultQuestionnaire, QuestionnaireContext } from "../../contexts/QuestionnaireContext";
-import MealModal from "./Modals/MealModal";
-import EmailModal from "./Modals/EmailModal";
+import MealModal from "./components/Modals/MealModal";
+import EmailModal from "./components/Modals/EmailModal";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { MealDataContext } from "../../contexts/MealDataContext";
 
@@ -53,12 +53,7 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
         }
     }, [])
 
-    function scoreColor(score: number): string {
-        if (score >= 90) return "bg-green-900 text-green-500"
-        else if (score >= 80) return "bg-green-300 text-green-800"
-        else if (score >= 70) return "bg-yellow-500 text-yellow-100"
-        else return "bg-red-200 text-red-800"
-    }
+
 
     if (loading) return <div>Loading...</div>
 
@@ -79,55 +74,79 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
                     }
 
                     return (
-                    <div key={JSON.stringify(mealPlan)} className="flex flex-col gap-10 mb-10">
-                        <div className="flex gap-3 text-black items-center flex-wrap">
-                            <h2 className="text-mm-text text-3xl" >Option {index+1}</h2>
-                            <div className="flex gap-3">
-                                {mealPlan.score && <span className={`${scoreColor(mealPlan.score)} p-2 rounded-xl w-fit`}>{mealPlan.score}% Match</span>}
-                                {mealPlan.bestScoreCategory && <span className="bg-red-400 text-white p-2 rounded-xl w-fit capitalize">Best Match: {mealPlan.bestScoreCategory}</span>}
-                            </div>
-                        </div>
-
-                        <div className="md:hidden flex flex-col gap-5">
-                            <MealCard meal={mealPlan.meals[0]} type="Breakfast" />
-                            <MealCard meal={mealPlan.meals[1]} type="Lunch" />
-                            <MealCard meal={mealPlan.meals[2]} type="Snack" />
-                            <MealCard meal={mealPlan.meals[3]} type="Dinner" />
-                            <Total fullNutrition={fullNutrition} />
-                        </div>
-
-                        <table className="md:table hidden text-nowrap resultTable">
-                            <thead>
-                                <tr>
-                                    <th className="!border-none"></th>
-                                    <th className="text-start text-mm-text">Dish</th>
-                                    <th className="text-mm-text">Calories</th>
-                                    <th className="text-mm-text">Carbs</th>
-                                    <th className="text-mm-text">Protein</th>
-                                    <th className="text-mm-text">Fat</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <MealRow meal={mealPlan.meals[0]} type="Breakfast"/>
-                                <MealRow meal={mealPlan.meals[1]} type="Lunch"/>
-                                <MealRow meal={mealPlan.meals[2]} type="Snack"/>
-                                <MealRow meal={mealPlan.meals[3]} type="Dinner"/>
-
-                                <tr className="">
-                                    <td className=" text-yellow-600">Total</td>
-                                    <td></td>
-                                    <td>{fullNutrition.calories} kcal</td>
-                                    <td>{fullNutrition.carbs}g</td>
-                                    <td>{fullNutrition.protein}g</td>
-                                    <td>{fullNutrition.fat}g</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        <MealPlan mealPlan={mealPlan} fullNutrition={fullNutrition} index={index} />
                     )
                 })}
             </div>
             <ResultButtons resultId={result.id} />
+        </div>
+    )
+}
+
+interface MealPlanProps {
+    mealPlan: MealPlan,
+    fullNutrition: {
+        calories:number,
+        protein:number,
+        carbs:number,
+        fat:number
+    },
+    index:number
+}
+
+function MealPlan({mealPlan, fullNutrition, index}: MealPlanProps) {
+    function scoreColor(score: number): string {
+        if (score >= 90) return "bg-green-900 text-green-500"
+        else if (score >= 80) return "bg-green-300 text-green-800"
+        else if (score >= 70) return "bg-yellow-500 text-yellow-100"
+        else return "bg-red-200 text-red-800"
+    }
+
+    return (
+        <div key={JSON.stringify(mealPlan)} className="flex flex-col gap-10 mb-10">
+            <div className="flex gap-3 text-black items-center flex-wrap">
+                <h2 className="text-mm-text text-3xl" >Option {index+1}</h2>
+                <div className="flex gap-3">
+                    {mealPlan.score && <span className={`${scoreColor(mealPlan.score)} p-2 rounded-xl w-fit`}>{mealPlan.score}% Match</span>}
+                    {mealPlan.bestScoreCategory && <span className="bg-red-400 text-white p-2 rounded-xl w-fit capitalize">Best Match: {mealPlan.bestScoreCategory}</span>}
+                </div>
+            </div>
+
+            <div className="md:hidden flex flex-col gap-5">
+                <MealCard meal={mealPlan.meals[0]} type="Breakfast" />
+                <MealCard meal={mealPlan.meals[1]} type="Lunch" />
+                <MealCard meal={mealPlan.meals[2]} type="Snack" />
+                <MealCard meal={mealPlan.meals[3]} type="Dinner" />
+                <Total fullNutrition={fullNutrition} />
+            </div>
+
+            <table className="md:table hidden text-nowrap resultTable">
+                <thead>
+                    <tr>
+                        <th className="!border-none"></th>
+                        <th className="text-start text-mm-text">Dish</th>
+                        <th className="text-mm-text">Calories</th>
+                        <th className="text-mm-text">Carbs</th>
+                        <th className="text-mm-text">Protein</th>
+                        <th className="text-mm-text">Fat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <MealRow meal={mealPlan.meals[0]} type="Breakfast"/>
+                    <MealRow meal={mealPlan.meals[1]} type="Lunch"/>
+                    <MealRow meal={mealPlan.meals[2]} type="Snack"/>
+                    <MealRow meal={mealPlan.meals[3]} type="Dinner"/>
+
+                    <tr className="">
+                        <td className=" text-yellow-600">Total</td>
+                        <td></td>
+                        <td>{fullNutrition.calories} kcal</td>
+                        <td>{fullNutrition.carbs}g</td>
+                        <td>{fullNutrition.protein}g</td>
+                        <td>{fullNutrition.fat}g</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     )
 }
