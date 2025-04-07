@@ -11,6 +11,7 @@ public class MealResponse {
         List<Meal> meals = new ArrayList<>();
         for (SpoonacularMeal snMeal : results) {
             Meal meal = new Meal();
+            meal.setId(snMeal.getId());
             meal.setTitle(snMeal.getTitle());
             meal.setImage(snMeal.getImage());
             meal.setVegetarian(snMeal.isVegetarian());

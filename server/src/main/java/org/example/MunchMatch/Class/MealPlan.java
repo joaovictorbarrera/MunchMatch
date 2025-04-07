@@ -26,6 +26,27 @@ public class MealPlan {
 
     private Long score;
 
+    @Override
+    public String toString() {
+        return "MealPlan{" +
+                "mealPlanId=" + mealPlanId +
+                ", meals=" + meals +
+                ", resultId=" + resultId +
+                ", score=" + score +
+                ", bestScoreCategory='" + bestScoreCategory + '\'' +
+                '}';
+    }
+
+    public String getBestScoreCategory() {
+        return bestScoreCategory;
+    }
+
+    public void setBestScoreCategory(String bestScoreCategory) {
+        this.bestScoreCategory = bestScoreCategory;
+    }
+
+    private String bestScoreCategory;
+
     public MealPlan() {
     }
 
@@ -67,13 +88,4 @@ public class MealPlan {
         this.resultId = resultId;
     }
 
-    @Override
-    public String toString() {
-        return "MealPlan{" +
-                "mealPlanId=" + mealPlanId +
-                ", meals=" + meals +
-                ", resultId=" + resultId +
-                ", score=" + score +
-                '}';
-    }
 }

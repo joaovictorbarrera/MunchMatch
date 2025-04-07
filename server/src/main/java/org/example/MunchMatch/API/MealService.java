@@ -23,7 +23,7 @@ public class MealService {
         this.restTemplate = restTemplate;
     }
     
-    public MealResponse getMeals(String title, Target target, Boolean vegetarian, Boolean gluten, Boolean dairy, String dishTypes, int number, int offset) {
+    public MealResponse getMeals(String title, Target target, Boolean vegetarian, Boolean gluten, Boolean dairy, int offset) {
         if(API_KEY.equals("api")){
             System.out.println("NO API KEY WAS FOUND. SHUTTING DOWN.");
             System.exit(0);
@@ -40,12 +40,13 @@ public class MealService {
                 .queryParam("maxProtein", target.getTargetProtein() == null ? 1000 : target.getTargetProtein())
                 .queryParam("diet", vegetarian != null && vegetarian ? "vegetarian" : "")
                 .queryParam("intolerances", String.join(",", intolerances))
-                .queryParam("dishTypes", String.join(",", dishTypes))
                 .queryParam("number", 100)  // Always request 100 meals
-                .queryParam("offset", 0)
+                .queryParam("offset", offset)
                 .queryParam("addRecipeNutrition", true)
                 .queryParam("apiKey", API_KEY)
                 .toUriString();
+
+        System.out.println("Public API Query: "+url);
 
         return restTemplate.getForObject(url, MealResponse.class);
 

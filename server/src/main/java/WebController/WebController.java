@@ -60,17 +60,14 @@ public class WebController {
             @RequestParam Boolean vegetarian,
             @RequestParam Boolean gluten,
             @RequestParam Boolean dairy,
-            @RequestParam (required = false) String dishTypes,
-            @RequestParam int number,
             @RequestParam int offset) {
-        return mealService.getMeals(title, new Target(calories, protein, carbs, fat), vegetarian, gluten, dairy, dishTypes, number, offset);
+        return mealService.getMeals(title, new Target(calories, protein, carbs, fat), vegetarian, gluten, dairy, offset);
     }
 
     @PostMapping("/suggestions")
-    public List<Meal> getMealSuggestions(@RequestBody MealRequest request, int number, int offset) {
+    public List<Meal> getMealSuggestions(@RequestBody MealRequest request, int offset) {
 
         System.out.println(request);
-        System.out.println("number: " + number);
         System.out.println("offset: " + offset);
 
         Questionnaire questionnaire = request.getQuestionnaire();
@@ -84,13 +81,11 @@ public class WebController {
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
 
         // Get meals from mealService based on the user's preferences
-        List<Meal> meals = mealService.getMeals("", target, vegetarian, glutenFree, lactoseFree, "", number, offset).getResults();
+        List<Meal> meals = mealService.getMeals("", target, vegetarian, glutenFree, lactoseFree, offset).getResults();
 
         // Apply filtering on the list of meals based on seen meals
         return meals.stream()
-                .filter(meal -> !seenMeals.contains(meal.getId())) // Exclude seen meals
-                .skip(offset) //Offset for each page
-                .limit(number) //limit
+                .filter(meal -> !seenMeals.contains(meal.getId())) // Exclude seen meals limit
                 .collect(Collectors.toList());
     }
 
