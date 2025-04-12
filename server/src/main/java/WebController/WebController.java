@@ -1,10 +1,12 @@
 package WebController;
 
+import jakarta.mail.MessagingException;
 import org.example.MunchMatch.API.*;
 import org.example.MunchMatch.Class.*;
 
 import org.example.MunchMatch.Engine.MealPlanGenerator;
 import org.example.MunchMatch.Engine.Target;
+import org.example.MunchMatch.db.Services.EmailService;
 import org.example.MunchMatch.db.Services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,9 @@ public class WebController {
 
     @Autowired
     private ResultService resultService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/success")
     public String successPage(Model model) {
@@ -96,4 +102,23 @@ public class WebController {
 //        return MockResultData.makeFakeResponse(mealPlans);
     }
 
+    @PostMapping("/email")
+    public void sendEmail(@RequestBody EmailRequest request) {
+        System.out.println(request);
+
+        String email = "Hello there,\n\n" +
+                "You are receiving this email because you opted in for receiving your meal plan results.\n\n" +
+                "Access my MunchMatch results: " + request.getResultLink() +
+                "\n\nEnjoy your meals!\n\n" +
+                "The MunchMatch Organization";
+
+        try {
+            emailService.sendSimpleEmail(request.getEmailAddress(), "Your MunchMatch Results", email);
+            System.out.println("Email Sent!");
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            System.out.println("Error sending email!");
+            throw new RuntimeException(e);
+        }
+
+    }
 }
