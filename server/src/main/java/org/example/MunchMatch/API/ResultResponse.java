@@ -1,17 +1,10 @@
 package org.example.MunchMatch.API;
-import jakarta.persistence.*;
 import org.example.MunchMatch.Class.MealPlan;
 
 import java.util.List;
 
-@Entity
-@Table(name = "results")
 public class ResultResponse {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ElementCollection
+    private int id;
     private List<MealPlan> mealPlans;
 
     public ResultResponse() {}
@@ -20,12 +13,12 @@ public class ResultResponse {
         this.mealPlans = mealPlans;
     }
 
-    public ResultResponse(Long id, List<MealPlan> mealPlans) {
+    public ResultResponse(int id, List<MealPlan> mealPlans) {
         this.id = id;
         this.mealPlans = mealPlans;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -33,7 +26,7 @@ public class ResultResponse {
         return mealPlans;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

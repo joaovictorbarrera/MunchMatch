@@ -1,14 +1,8 @@
 package org.example.MunchMatch.Class;
 
-import jakarta.persistence.*;
-
 import java.util.List;
 
-
-@Entity
-@Table (name= "meal")
 public class Meal {
-    @Id
     private int id;
     private String title;
     private double calories;
@@ -21,13 +15,10 @@ public class Meal {
     private boolean dairy;
     private List<String> dishTypes;
 
-    @Column(name = "mealPlanId")
-   private Long mealPlanId;
-
     public Meal() {
     }
 
-    public Meal(int id, String title, double calories, double carbs, double fat, double protein, String image, String imageType, boolean vegetarian, boolean gluten, boolean dairy, List<String> dishTypes) {
+    public Meal(int id, String title, double calories, double carbs, double fat, double protein, String image, boolean vegetarian, boolean gluten, boolean dairy, List<String> dishTypes) {
         this.id = id;
         this.title = title;
         this.calories = calories;
@@ -40,12 +31,6 @@ public class Meal {
         this.dairy = dairy;
         this.dishTypes = dishTypes;
     }
-
-    public <T> Meal(List<T> ts) {
-    }
-
-
-
 
     // Getters and setters for all fields
     public int getId() { return id; }

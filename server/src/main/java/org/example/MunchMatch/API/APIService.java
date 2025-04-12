@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MealService {
+public class APIService {
 
     @Value("${spoonacular.api.url}")
     private String API_URL;
@@ -19,7 +19,7 @@ public class MealService {
 
     private final RestTemplate restTemplate;
 
-    public MealService(RestTemplate restTemplate) {
+    public APIService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
     
@@ -46,7 +46,7 @@ public class MealService {
                 .queryParam("apiKey", API_KEY)
                 .toUriString();
 
-        System.out.println("Public API Query: "+url);
+//        System.out.println("Public API Query: "+url);
 
         return restTemplate.getForObject(url, MealResponse.class);
 

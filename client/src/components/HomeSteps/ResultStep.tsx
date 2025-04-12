@@ -6,11 +6,10 @@ import MealModal from "./components/Modals/MealModal";
 import EmailModal from "./components/Modals/EmailModal";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { MealDataContext } from "../../contexts/MealDataContext";
+import { ResultIdContext } from "../../contexts/ResultIdContext";
 
 export interface MealPlan {
-    mealPlanID: number,
     meals: Meal[],
-    resultId: number,
     score: number,
     bestScoreCategory: string
 }
@@ -21,6 +20,8 @@ export interface Result {
 }
 
 function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
+    const {resultId} = useContext(ResultIdContext);
+
     const {questionnaire,} = useContext(QuestionnaireContext)
     const {acceptedMeals} = useContext(AcceptedMealContext)
 
@@ -31,19 +32,33 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
 
     function fetchResult() {
         const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + "/results" : "/results"
-        fetch(URL, {
-            method: 'post',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({questionnaire, acceptedMeals})
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            setResult(data as Result)
-        })
-        .finally(() => setLoading(false))
+
+        if (resultId) {
+            fetch(URL+"?resultId="+resultId)
+            .then(res => {
+                if (res.status != 200) throw new Error()
+                return res.json()
+            })
+            .then(data => {
+                console.log(data)
+                setResult(data as unknown as Result)
+            })
+            .finally(() => setLoading(false))
+        } else {
+            fetch(URL, {
+                method: 'post',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({questionnaire, acceptedMeals})
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setResult(data as Result)
+            })
+            .finally(() => setLoading(false))
+        }
     }
 
     useEffect(() => {
@@ -53,15 +68,18 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
         }
     }, [])
 
+    if (loading) return <div className="text-center w-full">Loading...</div>
 
-
-    if (loading) return <div>Loading...</div>
-
-    if (!result) return <div className="text-center">Failed to get result</div>
+    if (!result) return <div className="text-center w-full">Failed to get result</div>
 
     return (
         <div className="flex flex-col mb-20 p-5 items-start">
-        <button className="text-mm-text bg-mm-primary py-2 px-5 rounded-lg w-fit cursor-pointer hover:brightness-90 flex items-center gap-2" onClick={handlePreviousPage}><MdOutlineArrowBack /> Back to Meal Selection</button>
+            {resultId == null && <button className="
+            text-mm-text bg-mm-primary py-2 px-5 rounded-lg
+            w-fit cursor-pointer hover:brightness-90 flex items-center gap-2"
+            onClick={handlePreviousPage}>
+                <MdOutlineArrowBack /> Back to Meal Selection
+            </button>}
             <h1 className="text-4xl text-mm-text my-10">Meal Plans</h1>
             <div className="flex flex-col gap-20">
 
@@ -74,7 +92,7 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
                     }
 
                     return (
-                        <MealPlan mealPlan={mealPlan} fullNutrition={fullNutrition} index={index} />
+                        <MealPlan key={JSON.stringify(mealPlan)} mealPlan={mealPlan} fullNutrition={fullNutrition} index={index} />
                     )
                 })}
             </div>
@@ -155,6 +173,7 @@ function ResultButtons({resultId}: {resultId: number}) {
     const {setAcceptedMeals} = useContext(AcceptedMealContext)
     const {setQuestionnaire} = useContext(QuestionnaireContext)
     const {setMealData, setCurrentMealIndex} = useContext(MealDataContext)
+    const {setResultId} = useContext(ResultIdContext)
     const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
 
     const [linkCopyText, setLinkCopyText] = useState<string>("Copy Link")
@@ -163,7 +182,10 @@ function ResultButtons({resultId}: {resultId: number}) {
         setQuestionnaire(defaultQuestionnaire)
         setAcceptedMeals([])
         setMealData([])
+        setResultId(null)
         setCurrentMealIndex(0)
+        const baseUrl = window.location.origin
+        window.history.replaceState({}, document.title, baseUrl)
         window.location.reload()
     }
 
@@ -223,7 +245,7 @@ function MealRow({meal, type}: {meal: Meal, type:string}) {
         {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
         <tr className="text-wrap">
             <td className="text-mm-text capitalize">{type}</td>
-            <td><button onClick={() => setOpen(true)} className="cursor-pointer underline">{meal.title}</button></td>
+            <td><button onClick={() => setOpen(true)} className="cursor-pointer underline w-full text-start">{meal.title}</button></td>
             <td>{meal.calories} kcal</td>
             <td>{meal.carbs}g</td>
             <td>{meal.protein}g</td>

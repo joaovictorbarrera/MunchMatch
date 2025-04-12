@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MockResultData {
-    private static final long mockResultID = 999;
+    private static final int mockResultID = 999;
     public static List<MealPlan> makeData(List<Meal> acceptedMeals) {
         List<MealPlan> mealPlans = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class MockResultData {
             meals.add(acceptedMeals.get(2 + 4*i));
             meals.add(acceptedMeals.get(3 + 4*i));
 
-            MealPlan mp = new MealPlan((long) i, meals, mockResultID);
+            MealPlan mp = new MealPlan(meals);
             mealPlans.add(mp);
         }
 

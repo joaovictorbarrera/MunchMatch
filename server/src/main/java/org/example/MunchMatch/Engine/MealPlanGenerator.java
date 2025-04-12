@@ -12,9 +12,6 @@ public class MealPlanGenerator {
         acceptedMeals = removeDuplicates(acceptedMeals);
         List<MealPlan> mealPlans = new ArrayList<>();
 
-        // TODO: figure out mealplanid and resultid
-        final long temporaryId = 999;
-
         List<Meal> breakfasts = acceptedMeals.stream().filter(m -> m.getDishTypes().contains("breakfast")).toList();
         List<Meal> lunches = acceptedMeals.stream().filter(m -> m.getDishTypes().contains("lunch")).toList();
         List<Meal> snacks = acceptedMeals.stream().filter(m -> !m.getDishTypes().contains("breakfast") && !m.getDishTypes().contains("lunch") && !m.getDishTypes().contains("dinner")).toList();
@@ -56,7 +53,7 @@ public class MealPlanGenerator {
                     for (Meal d : dinners) {
                         if (forcedDone) break;
                         List<Meal> meals = Arrays.asList(b, l, s, d);
-                        MealPlan mealPlan = new MealPlan(temporaryId, meals, temporaryId);
+                        MealPlan mealPlan = new MealPlan(meals);
                         mealPlan.setScore(Score.getScore(mealPlan, target));
                         mealPlans.add(mealPlan);
 

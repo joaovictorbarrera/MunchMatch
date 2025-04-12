@@ -131,7 +131,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
             />
 
             <div className="hidden xl:flex flex-col xl:flex-row gap-25 items-center w-full">
-                <button onClick={handleReject} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
+                <button onClick={handleReject} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90 select-none">
                     Not really
                     <div className="w-10 h-10 bg-red-600 rounded-full relative">
                         <IconContext.Provider value={{color: "#ffffff", size:"2rem", className:"absolute top-[50%] left-[50%] -translate-[50%]"}}>
@@ -139,7 +139,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
                         </IconContext.Provider>
                     </div>
                 </button>
-                <button onClick={handleAccept} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">
+                <button onClick={handleAccept} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90 select-none">
                     <div className="w-10 h-10 bg-green-600 rounded-full relative">
                         <IconContext.Provider value={{color: "66ff66", size:"2rem", className:"absolute top-[50%] left-[50%] -translate-[50%]"}}>
                             <RiCheckLine />

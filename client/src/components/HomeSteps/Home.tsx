@@ -2,10 +2,12 @@
 import QuestionnaireStep from "./QuestionnaireStep"
 import ResultStep from "./ResultStep"
 import MealSelectionStep from "./MealSelectionStep"
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ResultIdContext } from "../../contexts/ResultIdContext";
 
 function Home({page, setPage}: {page:number, setPage: React.Dispatch<React.SetStateAction<number>>}) {
     const [questionnaireStep, setQuestionnaireStep] = useState<number>(0);
+    const {resultId} = useContext(ResultIdContext);
 
     function handlePreviousPage() {
         setPage(state => {
@@ -29,7 +31,7 @@ function Home({page, setPage}: {page:number, setPage: React.Dispatch<React.SetSt
         ]
       )
 
-    return pageComponents.get(page)
+    return resultId ? pageComponents.get(3) : pageComponents.get(page)
 }
 
 export default Home

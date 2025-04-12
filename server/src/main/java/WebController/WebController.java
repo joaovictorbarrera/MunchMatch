@@ -5,14 +5,13 @@ import org.example.MunchMatch.Class.*;
 
 import org.example.MunchMatch.Engine.MealPlanGenerator;
 import org.example.MunchMatch.Engine.Target;
-import org.example.MunchMatch.Mock.MockResultData;
-import org.example.MunchMatch.Repository.UserRepository;
-import org.example.MunchMatch.Repository.ResultRepository;
-import org.example.MunchMatch.Repository.MealPlanRepository;
+import org.example.MunchMatch.db.Services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,35 +19,17 @@ import java.util.stream.Collectors;
 @Controller
 @RestController
 @CrossOrigin(origins = "*")
-
 public class WebController {
-
-    private MealSelectionService mealSelectionService;
-
-    public void MealSelectionController(MealSelectionService mealSelectionService) {
-        this.mealSelectionService = mealSelectionService;
-    }
+    @Autowired
+    private APIService apiService;
 
     @Autowired
-    UserRepository repository;
-    @Autowired
-    ResultRepository repositoryResult;
-    @Autowired
-    MealPlanRepository repositoryMealPlan;
+    private ResultService resultService;
 
-    private final MealService mealService;
-    @Autowired
-    public WebController(MealService mealService) {
-        this.mealService = mealService;
-    }
-
-    @PostMapping("/success")
-    public String successPage(@ModelAttribute User user, Model model) {
-        repository.save(user);
+    @GetMapping("/success")
+    public String successPage(Model model) {
         return "success";
-
     }
-
 
     @GetMapping("/meal")
     public MealResponse getMeals(
@@ -61,7 +42,7 @@ public class WebController {
             @RequestParam Boolean gluten,
             @RequestParam Boolean dairy,
             @RequestParam int offset) {
-        return mealService.getMeals(title, new Target(calories, protein, carbs, fat), vegetarian, gluten, dairy, offset);
+        return apiService.getMeals(title, new Target(calories, protein, carbs, fat), vegetarian, gluten, dairy, offset);
     }
 
     @PostMapping("/suggestions")
@@ -80,8 +61,8 @@ public class WebController {
         boolean glutenFree = questionnaire.getRestrictions().isGlutenFree();
         boolean vegetarian = questionnaire.getRestrictions().isVegetarian();
 
-        // Get meals from mealService based on the user's preferences
-        List<Meal> meals = mealService.getMeals("", target, vegetarian, glutenFree, lactoseFree, offset).getResults();
+        // Get meals from apiService based on the user's preferences
+        List<Meal> meals = apiService.getMeals("", target, vegetarian, glutenFree, lactoseFree, offset).getResults();
 
         // Apply filtering on the list of meals based on seen meals
         return meals.stream()
@@ -89,11 +70,16 @@ public class WebController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/results")
+    public ResultResponse getResultFromId(@RequestParam (required = true) int resultId) {
+        ResultResponse res = resultService.getResult(resultId);
+        if (res == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
+        return res;
+    }
+
     //Create a meal plan results
     @PostMapping("/results")
     public ResultResponse createMealPlan(@RequestBody ResultRequest request) {
-        // ResponseEntity<ResultResponse>
-        // return ResponseEntity.ok(mealSelectionService.saveResult(acceptedMeals));
         System.out.println(request);
 
         Target target = new Target(request.getQuestionnaire());
@@ -102,15 +88,12 @@ public class WebController {
         List<MealPlan> mealPlans = MealPlanGenerator.generateMealPlans(request.getAcceptedMeals(), target);
 
         // Step 2: Save Meal Plan to Database, get resultId
-        // long resultId = DatabaseService.saveResult(mealPlans);
+         int resultId = resultService.addResult(mealPlans);
 
-        // Step 3: Create Result Response
-        // ResultResponse response = new ResultResponse(resultId, mealPlans);
+        // Step 3: return the created results
+        return new ResultResponse(resultId, mealPlans);
 
-        // Step 4: return the created results
-        // return response;
-
-        return MockResultData.makeFakeResponse(mealPlans);
+//        return MockResultData.makeFakeResponse(mealPlans);
     }
 
 }

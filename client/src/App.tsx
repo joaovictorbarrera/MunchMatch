@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { defaultQuestionnaire, Questionnaire, QuestionnaireContext } from './contexts/QuestionnaireContext';
 import { Meal } from './components/HomeSteps/MealSelectionStep';
@@ -9,12 +9,25 @@ import About from './components/ExtraPages/About';
 import Contact from './components/ExtraPages/Contact';
 import Mission from './components/ExtraPages/Mission';
 import { MealDataContext } from './contexts/MealDataContext';
+import { ResultIdContext } from './contexts/ResultIdContext';
 
 
 function App() {
+  const [resultId, setResultId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const resultId = queryParams.get('resultId');
+    if (resultId && !isNaN(Number(resultId))) {
+      setResultId(parseInt(resultId))
+    }
+  }, [])
+
   return (
     <div className='w-full min-h-screen bg-mm-bg flex justify-center relative'>
-      <Window />
+      <ResultIdContext.Provider value={{resultId, setResultId}}>
+        <Window />
+      </ResultIdContext.Provider>
     </div>
   )
 }
