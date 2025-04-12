@@ -5,8 +5,11 @@ import { QuestionnaireContext } from "../../contexts/QuestionnaireContext";
 import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { MdOutlineArrowBack, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { MealDataContext } from "../../contexts/MealDataContext";
-import isReadyToProcessResult from "../../extra/isReadyToProcessResult";
 import MealCard from "./components/MealCard";
+import Tooltip from "./components/Tooltip";
+import ResultRequirements from "./components/ResultRequirements";
+import { isReadyToProcessResult } from "../../extra/isReadyToProcessResult";
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 export interface Meal {
     image: string,
@@ -148,18 +151,27 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
                     I like it!
                 </button>
 
-                <button onClick={handleGetResults} disabled={!isReadyToProcessResult(acceptedMeals)} className="
-                    disabled:cursor-auto cursor-pointer
-                    disabled:brightness-100 hover:brightness-70
-                    disabled:text-gray-400 disabled:decoration-gray-400
-                    decoration-[#4571EA] text-black
-                    text-2xl underline underline-offset-8
-                    flex items-end ml-auto">
-                    Get Results
-                    <IconContext.Provider value={{color: `${!isReadyToProcessResult(acceptedMeals) ? "#99a1af" : "#4571EA" }`, size:"2rem", className:""}}>
-                        <MdOutlineKeyboardDoubleArrowRight   />
-                    </IconContext.Provider>
-                </button>
+                <div className="ml-auto flex gap-1">
+                    {!isReadyToProcessResult(acceptedMeals) &&
+                    <Tooltip content={<ResultRequirements />}>
+                        <IconContext.Provider value={{color:"99a1af", size:"1.5rem", className: "mt-2"}}>
+                            <IoInformationCircleOutline />
+                        </IconContext.Provider>
+                    </Tooltip>}
+
+                    <button onClick={handleGetResults} disabled={!isReadyToProcessResult(acceptedMeals)} className="
+                        disabled:cursor-auto cursor-pointer
+                        disabled:brightness-100 hover:brightness-70
+                        disabled:text-gray-400 disabled:decoration-gray-400
+                        decoration-[#4571EA] text-black
+                        text-2xl underline underline-offset-8
+                        flex items-end select-none">
+                        Get Results
+                        <IconContext.Provider value={{color: `${!isReadyToProcessResult(acceptedMeals) ? "#99a1af" : "#4571EA" }`, size:"2rem", className:""}}>
+                            <MdOutlineKeyboardDoubleArrowRight   />
+                        </IconContext.Provider>
+                    </button>
+                </div>
             </div>
 
             <div className="flex w-full border-y-2 border-gray-300 border-dashed">

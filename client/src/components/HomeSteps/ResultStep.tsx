@@ -131,10 +131,10 @@ function MealPlan({mealPlan, fullNutrition, index}: MealPlanProps) {
             </div>
 
             <div className="md:hidden flex flex-col gap-5">
-                <MealCard meal={mealPlan.meals[0]} type="Breakfast" />
-                <MealCard meal={mealPlan.meals[1]} type="Lunch" />
-                <MealCard meal={mealPlan.meals[2]} type="Snack" />
-                <MealCard meal={mealPlan.meals[3]} type="Dinner" />
+                <ResultCard meal={mealPlan.meals[0]} type="Breakfast" />
+                <ResultCard meal={mealPlan.meals[1]} type="Lunch" />
+                <ResultCard meal={mealPlan.meals[2]} type="Snack" />
+                <ResultCard meal={mealPlan.meals[3]} type="Dinner" />
                 <Total fullNutrition={fullNutrition} />
             </div>
 
@@ -217,7 +217,7 @@ function Total({fullNutrition}: {fullNutrition: {calories: number, fat: number, 
     )
 }
 
-function MealCard({meal, type}: {meal: Meal, type:string}) {
+function ResultCard({meal, type}: {meal: Meal, type:string}) {
     const [modalOpen, setOpen] = useState<boolean>(false);
 
     return (
