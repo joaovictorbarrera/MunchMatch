@@ -6,16 +6,18 @@ import { isReadyToProcessResult } from "../../../extra/isReadyToProcessResult"
 import Tooltip from "./Tooltip"
 import ResultRequirements from "./ResultRequirements"
 import { IoInformationCircleOutline } from "react-icons/io5"
+import { useContext } from "react"
+import { AcceptedMealContext } from "../../../contexts/AcceptedMealContext"
 
 interface MealCardProps {
     mealData: Meal,
     handleAccept: () => void,
     handleReject: () => void,
-    handleGetResults: () => void,
-    acceptedMeals: Meal[]
+    handleGetResults: () => void
 }
 
-function MealCard({mealData, handleAccept, handleReject, handleGetResults, acceptedMeals}: MealCardProps) {
+function MealCard({mealData, handleAccept, handleReject, handleGetResults}: MealCardProps) {
+    const {acceptedMeals} = useContext(AcceptedMealContext)
 
     return (
         <div className="flex flex-col xl:flex-row xl:gap-10 gap-4 items-center w-fit xl:px-0 px-5">
@@ -62,12 +64,6 @@ function MealCard({mealData, handleAccept, handleReject, handleGetResults, accep
                     <div className="flex flex-col text-start gap-5">
                         <h1 className="text-2xl xl:text-2xl text-mm-text">{mealData.title}</h1>
                         <span className="bg-mm-secondary p-3 rounded-xl w-fit text-mm-text font-bold">{mealData.calories} calories</span>
-                    </div>
-                    <div className="grid grid-cols-2 w-fit gap-3 text-start text-nowrap text-mm-text text-lg">
-                        <span className="border-1 bg-mm-primary flex justify-center items-center w-35 h-12">Lunch: {acceptedMeals.filter(meal => meal.dishTypes.includes('lunch')).length}</span>
-                        <span className="border-1 bg-mm-primary flex justify-center items-center w-35 h-12">Breakfast: {acceptedMeals.filter(meal => meal.dishTypes.includes('breakfast')).length}</span>
-                        <span className="border-1 bg-mm-primary flex justify-center items-center w-35 h-12">Snack: {acceptedMeals.filter(meal => !meal.dishTypes.includes('lunch') && !meal.dishTypes.includes('breakfast') && !meal.dishTypes.includes('dinner') ).length}</span>
-                        <span className="border-1 bg-mm-primary flex justify-center items-center w-35 h-12">Dinner: {acceptedMeals.filter(meal => meal.dishTypes.includes('dinner')).length}</span>
                     </div>
                 </div>
 

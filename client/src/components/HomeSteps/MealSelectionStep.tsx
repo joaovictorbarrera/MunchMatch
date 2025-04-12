@@ -130,7 +130,6 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
                 handleAccept={handleAccept}
                 handleReject={handleReject}
                 handleGetResults={handleGetResults}
-                acceptedMeals={acceptedMeals}
             />
 
             <div className="hidden xl:flex flex-col xl:flex-row gap-25 items-center w-full">

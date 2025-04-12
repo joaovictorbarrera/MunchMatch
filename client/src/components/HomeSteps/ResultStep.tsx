@@ -4,9 +4,10 @@ import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { defaultQuestionnaire, QuestionnaireContext } from "../../contexts/QuestionnaireContext";
 import MealModal from "./components/Modals/MealModal";
 import EmailModal from "./components/Modals/EmailModal";
-import { MdOutlineArrowBack } from "react-icons/md";
+import { MdEmail, MdOutlineArrowBack, MdOutlineRestartAlt } from "react-icons/md";
 import { MealDataContext } from "../../contexts/MealDataContext";
 import { ResultIdContext } from "../../contexts/ResultIdContext";
+import { IoIosAttach } from "react-icons/io";
 
 export interface MealPlan {
     meals: Meal[],
@@ -114,14 +115,14 @@ interface MealPlanProps {
 
 function MealPlan({mealPlan, fullNutrition, index}: MealPlanProps) {
     function scoreColor(score: number): string {
-        if (score >= 90) return "bg-green-900 text-green-500"
+        if (score >= 90) return "bg-green-900 text-green-300"
         else if (score >= 80) return "bg-green-300 text-green-800"
         else if (score >= 70) return "bg-yellow-500 text-yellow-100"
         else return "bg-red-200 text-red-800"
     }
 
     return (
-        <div key={JSON.stringify(mealPlan)} className="flex flex-col gap-10 mb-10">
+        <div key={JSON.stringify(mealPlan)} className="flex flex-col gap-5 mb-10">
             <div className="flex gap-3 text-black items-center flex-wrap">
                 <h2 className="text-mm-text text-3xl" >Option {index+1}</h2>
                 <div className="flex gap-3">
@@ -177,6 +178,7 @@ function ResultButtons({resultId}: {resultId: number}) {
     const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
 
     const [linkCopyText, setLinkCopyText] = useState<string>("Copy Link")
+    const resultLink = window.location.origin + "?resultId=" + resultId
 
     function clearAndStartOver() {
         setQuestionnaire(defaultQuestionnaire)
@@ -190,23 +192,35 @@ function ResultButtons({resultId}: {resultId: number}) {
     }
 
     function copyLink() {
-        navigator.clipboard.writeText(window.location.origin + "?resultId=" + resultId);
+        navigator.clipboard.writeText(resultLink);
         setLinkCopyText("Link Copied!")
     }
 
     return (
         <div className="flex">
-            <button onClick={clearAndStartOver} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">Start Over</button>
-            <button onClick={() => setEmailModalOpen(true)} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">Send to email</button>
-            <button onClick={copyLink} type="button" className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90">{linkCopyText}</button>
-            {emailModalOpen && <EmailModal setOpen={setEmailModalOpen} />}
+            <button onClick={clearAndStartOver} type="button"
+            className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90 flex gap-1 items-center">
+                <MdOutlineRestartAlt />
+                Start Over
+            </button>
+            <button onClick={() => setEmailModalOpen(true)} type="button"
+            className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90 flex items-center gap-1">
+                <MdEmail />
+                Send to email
+            </button>
+            <button onClick={copyLink} type="button"
+            className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90 flex gap-1 items-center">
+                <IoIosAttach />
+                {linkCopyText}
+            </button>
+            {emailModalOpen && <EmailModal resultLink={resultLink} setOpen={setEmailModalOpen} />}
         </div>
     )
 }
 
 function Total({fullNutrition}: {fullNutrition: {calories: number, fat: number, protein:number, carbs:number}}) {
     return (
-        <div className="bg-mm-text text-mm-bg border-black border-2 rounded-xl p-5 flex flex-col text-lg gap-2">
+        <div className="bg-mm-text text-mm-bg  rounded-xl p-5 flex flex-col text-lg gap-2">
             <strong className="underline">{fullNutrition.calories} Calories Total</strong>
             <div className="flex gap-3 text-black">
                 <span className="bg-mm-secondary p-2 rounded-xl">Protein: {fullNutrition.protein}g</span>
@@ -223,7 +237,7 @@ function ResultCard({meal, type}: {meal: Meal, type:string}) {
     return (
         <>
         {modalOpen && <MealModal mealData={meal} setOpen={setOpen} />}
-        <div onClick={() => setOpen(true)} className="bg-mm-primary border-mm-text border-2 rounded-xl p-5 flex flex-col text-lg gap-2 cursor-pointer hover:brightness-90">
+        <div onClick={() => setOpen(true)} className="bg-mm-primary border-mm-text rounded-xl p-5 flex flex-col text-lg gap-2 cursor-pointer hover:brightness-90">
             <span className="bg-red-400 text-white p-2 px-3 rounded-xl w-fit">{type}</span>
             <strong>{meal.title}</strong>
             <div className="flex gap-3 text-mm-text">

@@ -5,9 +5,17 @@ import Intro from "../Questionnaire/Intro";
 import Nutrition from "../Questionnaire/Nutrition";
 import Restrictions from "../Questionnaire/Restrictions";
 import Confirmation from "../Questionnaire/Confirmation";
+import { MealDataContext } from "../../contexts/MealDataContext";
+import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
+
+export interface inputPartProps {
+    cleanData: () => void
+}
 
 function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setStep: React.Dispatch<React.SetStateAction<number>>, handleNextPage: () => void}) {
     const MAX_STEPS = 4
+    const {setMealData, setCurrentMealIndex} = useContext(MealDataContext)
+    const {setAcceptedMeals} = useContext(AcceptedMealContext)
 
     function handleBack() {
         setStep(step => {
@@ -23,35 +31,33 @@ function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setSt
         })
     }
 
+    function cleanData() {
+        setMealData([])
+        setCurrentMealIndex(0)
+        setAcceptedMeals([])
+    }
+
     const stepComponents = new Map([
         [0, <Intro handleNext={handleNext} />],
-        [1, <Calories />],
-        [2, <Nutrition />],
-        [3, <Restrictions />],
+        [1, <Calories cleanData={cleanData} />],
+        [2, <Nutrition cleanData={cleanData}  />],
+        [3, <Restrictions cleanData={cleanData} />],
         [4, <Confirmation />]
     ])
-
-    // const enterListenHandler = (e: any) => {
-    //     if (e.key === "Enter") {
-    //       window.alert("Enter key pressed!");
-    //       // Do something with the entered text
-
-    //     }
-    //   };
 
     return (
         <div className="w-full p-5 py-10 border-b-2 flex flex-col gap-30 border-mm-text">
             <div className=" flex items-center justify-center">
                 {stepComponents.get(step)}
             </div>
-            {step > 0 ?
+            {step > 0 &&
             <div className="flex flex-col items-center gap-10">
                 <Navigation step={step} handleBack={handleBack} handleNext={handleNext} handleNextPage={handleNextPage} />
                 <div className="flex w-full border-y-2 border-gray-300 border-dashed">
                     <hr className="border-t-3 border-mm-text" style={{width:`${step*(100.0/MAX_STEPS)}%`}} />
                     <hr className="border-t-3 border-mm-secondary" style={{width:`${(MAX_STEPS-step)*(100.0/MAX_STEPS)}%`}}/>
                 </div>
-            </div> : null}
+            </div>}
         </div>
     )
 }

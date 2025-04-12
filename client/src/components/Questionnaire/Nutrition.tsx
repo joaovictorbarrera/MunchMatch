@@ -1,7 +1,8 @@
 import { ChangeEvent, useContext } from 'react'
 import { QuestionnaireContext } from '../../contexts/QuestionnaireContext'
+import { inputPartProps } from '../HomeSteps/QuestionnaireStep'
 
-function Nutrition() {
+function Nutrition({cleanData}: inputPartProps) {
     const {questionnaire, setQuestionnaire} = useContext(QuestionnaireContext)
 
     function handleNutritionChange(e: ChangeEvent<HTMLInputElement>, type: "protein" | "carbs" | "fat") {
@@ -9,6 +10,8 @@ function Nutrition() {
             q.nutrition[type] = e.target.value == "" ? -1 : Number(e.target.value)
             return {...q}
         })
+
+        cleanData()
     }
 
     return (

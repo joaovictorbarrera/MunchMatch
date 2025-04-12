@@ -1,7 +1,8 @@
 import { ChangeEvent, useContext } from "react"
 import { QuestionnaireContext } from "../../contexts/QuestionnaireContext"
+import { inputPartProps } from "../HomeSteps/QuestionnaireStep"
 
-function Restrictions() {
+function Restrictions({cleanData}: inputPartProps) {
     const {questionnaire, setQuestionnaire} = useContext(QuestionnaireContext)
 
     function handleRestrictionChange(e: ChangeEvent<HTMLInputElement>, type: "lactoseFree" | "glutenFree" | "vegetarian") {
@@ -9,6 +10,8 @@ function Restrictions() {
             q.restrictions[type] = e.target.checked
             return {...q}
         })
+
+        cleanData()
     }
 
     return (

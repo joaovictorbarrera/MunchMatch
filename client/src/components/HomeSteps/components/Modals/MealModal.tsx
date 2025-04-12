@@ -16,11 +16,11 @@ export default function MealModal({mealData, setOpen}: {mealData: Meal, setOpen:
                     <header className="text-3xl text-mm-text text-wrap">{mealData.title}</header>
                     <span className="bg-mm-secondary p-3 rounded-xl text-mm-text font-bold">{mealData.calories} calories</span>
                     <hr className="w-full bg-mm-text h-[1px]" />
-                    <div className="flex flex-col gap-3 text-mm-secondary items-start">
+                    <div className="flex flex-col gap-3 text-mm-text items-start">
                         <h2 className="font-bold text-black">Nutrition:</h2>
-                        <span className="bg-mm-text p-2 rounded-xl">Protein: {mealData.protein}g</span>
-                        <span className="bg-mm-text p-2 rounded-xl">Carbs: {mealData.carbs}g</span>
-                        <span className="bg-mm-text p-2 rounded-xl">Fat: {mealData.fat}g</span>
+                        <span className="bg-mm-secondary p-2 rounded-xl">Protein: {mealData.protein}g</span>
+                        <span className="bg-mm-secondary p-2 rounded-xl">Carbs: {mealData.carbs}g</span>
+                        <span className="bg-mm-secondary p-2 rounded-xl">Fat: {mealData.fat}g</span>
                     </div>
                 </div>
                 <button onClick={() => setOpen(false)} className="cursor-pointer bg-mm-primary p-2 rounded-xl text-mm-text border-1 hover:brightness-90">Close</button>
