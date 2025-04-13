@@ -1,13 +1,15 @@
 package WebController;
 
 import jakarta.mail.MessagingException;
-import org.example.MunchMatch.API.*;
-import org.example.MunchMatch.Class.*;
+import org.MunchMatch.api.*;
+import org.MunchMatch.obj.Meal;
+import org.MunchMatch.obj.MealPlan;
+import org.MunchMatch.obj.Questionnaire;
 
-import org.example.MunchMatch.Engine.MealPlanGenerator;
-import org.example.MunchMatch.Engine.Target;
-import org.example.MunchMatch.db.Services.EmailService;
-import org.example.MunchMatch.db.Services.ResultService;
+import org.MunchMatch.engine.MealPlanGenerator;
+import org.MunchMatch.engine.Target;
+import org.MunchMatch.db.services.EmailService;
+import org.MunchMatch.db.services.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -98,8 +100,6 @@ public class WebController {
 
         // Step 3: return the created results
         return new ResultResponse(resultId, mealPlans);
-
-//        return MockResultData.makeFakeResponse(mealPlans);
     }
 
     @PostMapping("/email")

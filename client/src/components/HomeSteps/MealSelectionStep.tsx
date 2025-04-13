@@ -52,7 +52,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
             body: JSON.stringify({questionnaire, seenMeals})
         })
         .then(res => {
-            if (res.status == 500) window.alert("Internal Server Error! API Limit reached ?")
+            if (res.status == 500) window.alert("Internal Server Error! api Limit reached ?")
             return res.json()
         })
         .then(data => {
