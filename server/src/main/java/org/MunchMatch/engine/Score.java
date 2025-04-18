@@ -13,14 +13,26 @@ public class Score {
 
         long sum = 0;
 
-        // Each nutrient contributes to 25% of scoring.
+        // Each nutrient contributes to the score proportionally if they are present.
         sum += getNutrientScore(total.getTotalCalories(), target.getTargetCalories());
         sum += getNutrientScore(total.getTotalProtein(), target.getTargetProtein());
         sum += getNutrientScore(total.getTotalCarbs(), target.getTargetCarbs());
         sum += getNutrientScore(total.getTotalFat(), target.getTargetFat());
 
+        int distributionFactor = getDistributionFactor(target);
+
         // Here the score gets translated to More is better.
-        return 100 - (sum / 4);
+        return 100 - (sum / distributionFactor);
+    }
+
+    private static int getDistributionFactor(Target target) {
+        int factor = 1;
+
+        if (target.getTargetCarbs() != null) factor++;
+        if (target.getTargetProtein() != null) factor++;
+        if (target.getTargetFat() != null) factor++;
+
+        return factor;
     }
 
     public static String getBestScoreCategory(MealPlan mealPlan, Target target) {
