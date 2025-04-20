@@ -7,7 +7,7 @@ import Tooltip from "./Tooltip"
 import ResultRequirements from "./ResultRequirements"
 import { IoInformationCircleOutline } from "react-icons/io5"
 import { useContext } from "react"
-import { AcceptedMealContext } from "../../../contexts/AcceptedMealContext"
+import { MealDataContext } from "../../../contexts/MealDataContext"
 
 interface MealCardProps {
     mealData: Meal,
@@ -17,7 +17,7 @@ interface MealCardProps {
 }
 
 function MealCard({mealData, handleAccept, handleReject, handleGetResults}: MealCardProps) {
-    const {acceptedMeals} = useContext(AcceptedMealContext)
+    const {acceptedMeals} = useContext(MealDataContext)
 
     return (
         <div className="flex flex-col xl:flex-row xl:gap-10 gap-4 items-center w-fit xl:px-0 px-5">

@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { IconContext } from "react-icons";
 import { RiCheckLine, RiCloseFill } from "react-icons/ri";
 import { QuestionnaireContext } from "../../contexts/QuestionnaireContext";
-import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { MdOutlineArrowBack, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { MealDataContext } from "../../contexts/MealDataContext";
 import MealCard from "./components/MealCard";
@@ -30,19 +29,18 @@ const MIN_MEALS_TO_PROGRESS = 30
 function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage: () => void, handlePreviousPage: () => void}) {
 
     const {questionnaire,} = useContext(QuestionnaireContext)
-    const {mealData, setMealData, currentMealIndex, setCurrentMealIndex} = useContext(MealDataContext)
-    const {acceptedMeals, setAcceptedMeals} = useContext(AcceptedMealContext)
+    const {mealData, setMealData, currentMealIndex, setCurrentMealIndex, acceptedMeals, setAcceptedMeals, offset, setOffset} = useContext(MealDataContext)
 
     const [seenMeals, setSeenMeals] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(mealData.length == 0);
     const [error, setError] = useState<boolean>(false);
 
-    const [offset, setOffset] = useState<number>(0);
-    const hasFetched = useRef(false);
+    const shouldFetch = useRef(false);
 
     function fetchMealData() {
         setLoading(true)
-        setOffset(n => n+100)
+        console.log("Fetched, offset: " + offset)
+        setOffset(offset => offset + 100)
         const URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL + `/suggestions?offset=${offset}` : `/suggestions?&offset=${offset}`
         fetch(URL, {
             method: 'post',
@@ -56,7 +54,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
             return res.json()
         })
         .then(data => {
-            console.log(data)
+            // console.log(data)
             if (data.error) {
                 setError(true)
                 return
@@ -72,16 +70,16 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
     }
 
     useEffect(() => {
-        if (!hasFetched.current && currentMealIndex + 1 >= mealData.length) {
+        if (!shouldFetch.current && currentMealIndex + 1 >= mealData.length) {
             fetchMealData()
-            hasFetched.current = true
+            shouldFetch.current = true
         }
-    }, [])
+    })
 
     function nextDish() {
         setCurrentMealIndex(n => {
             if (n + 1 == mealData.length) {
-                fetchMealData()
+                shouldFetch.current = false
             }
             return n + 1
         })

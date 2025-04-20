@@ -1,8 +1,8 @@
 import { useContext } from "react"
-import { AcceptedMealContext } from "../../../contexts/AcceptedMealContext"
+import { MealDataContext } from "../../../contexts/MealDataContext"
 
 export default function MealTypeCounter() {
-    const {acceptedMeals} = useContext(AcceptedMealContext)
+    const {acceptedMeals} = useContext(MealDataContext)
 
     return (
     <div className="grid grid-cols-2 w-fit gap-1 text-start text-nowrap text-sm">

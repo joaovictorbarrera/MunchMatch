@@ -1,10 +1,10 @@
 import { useContext } from "react"
-import { AcceptedMealContext } from "../../../contexts/AcceptedMealContext"
 import { isEnoughMeals, isOneOfEachType } from "../../../extra/isReadyToProcessResult"
 import MealTypeCounter from "./MealTypeCounter"
+import { MealDataContext } from "../../../contexts/MealDataContext"
 
 function ResultRequirements() {
-    const {acceptedMeals} = useContext(AcceptedMealContext)
+    const {acceptedMeals} = useContext(MealDataContext)
 
     return (
         <div className="w-full text-start">

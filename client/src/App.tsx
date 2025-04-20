@@ -3,7 +3,6 @@ import './App.css'
 import { defaultQuestionnaire, Questionnaire, QuestionnaireContext } from './contexts/QuestionnaireContext';
 import { Meal } from './components/HomeSteps/MealSelectionStep';
 import NavBar from './components/NavBar';
-import { AcceptedMealContext } from './contexts/AcceptedMealContext';
 import Home from './components/HomeSteps/Home';
 import About from './components/ExtraPages/About';
 import Contact from './components/ExtraPages/Contact';
@@ -41,6 +40,7 @@ function Window() {
 
   const [currentMealIndex, setCurrentMealIndex] = useState<number>(0);
   const [mealData, setMealData] = useState<Meal[]>([])
+  const [offset, setOffset] = useState<number>(0);
 
   const pageComponents = new Map(
     [
@@ -55,13 +55,11 @@ function Window() {
   <div className='w-full bg-mm-bg flex justify-center'>
     <div className='w-[1200px] flex flex-col text-black'>
       <NavBar page={page} setPage={setPage} />
-      <main className='text-xl flex pt-5'>
+      <main className='text-xl flex '>
         <QuestionnaireContext.Provider value={{questionnaire, setQuestionnaire}}>
-          <AcceptedMealContext.Provider value={{acceptedMeals, setAcceptedMeals}}>
-            <MealDataContext.Provider value={{mealData, setMealData, currentMealIndex, setCurrentMealIndex}}>
-              {pageComponents.get(page)}
-            </MealDataContext.Provider>
-          </AcceptedMealContext.Provider>
+          <MealDataContext.Provider value={{mealData, setMealData, currentMealIndex, setCurrentMealIndex, acceptedMeals, setAcceptedMeals, offset, setOffset}}>
+            {pageComponents.get(page)}
+          </MealDataContext.Provider>
         </QuestionnaireContext.Provider>
       </main>
       <footer className='mt-auto p-5'>

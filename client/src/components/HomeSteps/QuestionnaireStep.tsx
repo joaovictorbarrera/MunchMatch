@@ -6,7 +6,6 @@ import Nutrition from "../Questionnaire/Nutrition";
 import Restrictions from "../Questionnaire/Restrictions";
 import Confirmation from "../Questionnaire/Confirmation";
 import { MealDataContext } from "../../contexts/MealDataContext";
-import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 
 export interface inputPartProps {
     cleanData: () => void
@@ -14,8 +13,7 @@ export interface inputPartProps {
 
 function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setStep: React.Dispatch<React.SetStateAction<number>>, handleNextPage: () => void}) {
     const MAX_STEPS = 4
-    const {setMealData, setCurrentMealIndex} = useContext(MealDataContext)
-    const {setAcceptedMeals} = useContext(AcceptedMealContext)
+    const {setMealData, setCurrentMealIndex, setAcceptedMeals, setOffset} = useContext(MealDataContext)
 
     function handleBack() {
         setStep(step => {
@@ -35,6 +33,7 @@ function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setSt
         setMealData([])
         setCurrentMealIndex(0)
         setAcceptedMeals([])
+        setOffset(0)
     }
 
     const stepComponents = new Map([

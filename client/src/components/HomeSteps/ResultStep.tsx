@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { Meal } from "./MealSelectionStep"
-import { AcceptedMealContext } from "../../contexts/AcceptedMealContext";
 import { defaultQuestionnaire, QuestionnaireContext } from "../../contexts/QuestionnaireContext";
 import MealModal from "./components/Modals/MealModal";
 import EmailModal from "./components/Modals/EmailModal";
@@ -24,7 +23,7 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
     const {resultId} = useContext(ResultIdContext);
 
     const {questionnaire,} = useContext(QuestionnaireContext)
-    const {acceptedMeals} = useContext(AcceptedMealContext)
+    const {acceptedMeals} = useContext(MealDataContext)
 
     const [result, setResult] = useState<Result>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -41,7 +40,7 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
                 return res.json()
             })
             .then(data => {
-                console.log(data)
+                // console.log(data)
                 setResult(data as unknown as Result)
             })
             .finally(() => setLoading(false))
@@ -55,7 +54,7 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                // console.log(data)
                 setResult(data as Result)
             })
             .finally(() => setLoading(false))
@@ -171,9 +170,8 @@ function MealPlan({mealPlan, fullNutrition, index}: MealPlanProps) {
 }
 
 function ResultButtons({resultId}: {resultId: number}) {
-    const {setAcceptedMeals} = useContext(AcceptedMealContext)
     const {setQuestionnaire} = useContext(QuestionnaireContext)
-    const {setMealData, setCurrentMealIndex} = useContext(MealDataContext)
+    const {setMealData, setCurrentMealIndex, setAcceptedMeals, setOffset} = useContext(MealDataContext)
     const {setResultId} = useContext(ResultIdContext)
     const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
 
@@ -184,6 +182,7 @@ function ResultButtons({resultId}: {resultId: number}) {
         setQuestionnaire(defaultQuestionnaire)
         setAcceptedMeals([])
         setMealData([])
+        setOffset(0)
         setResultId(null)
         setCurrentMealIndex(0)
         const baseUrl = window.location.origin
