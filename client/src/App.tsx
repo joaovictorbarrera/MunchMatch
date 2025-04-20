@@ -62,7 +62,7 @@ function Window() {
           </MealDataContext.Provider>
         </QuestionnaireContext.Provider>
       </main>
-      <footer className='mt-auto p-5'>
+      <footer className='mt-auto p-5 opacity-70 text-sm'>
           <p className='text-mm-text text-center'>2025 All rights reserved. Made by the Munch Match Team.</p>
       </footer>
     </div>

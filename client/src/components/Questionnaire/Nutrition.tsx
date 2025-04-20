@@ -17,7 +17,7 @@ function Nutrition({cleanData}: inputPartProps) {
     return (
         <div className="flex flex-col gap-5 text-mm-text text-center">
             <div>
-                <h1 className="text-2xl">Please enter your target nutrition in grams:</h1>
+                <h1 className="lg:text-2xl">Please enter your target nutrition in grams:</h1>
                 <p className="text-md font-light">(Leave blank if no specific amount)</p>
             </div>
             <form onSubmit={e => e.preventDefault()} action="" className="flex flex-col items-center w-full gap-5">

@@ -17,4 +17,6 @@ html, body, #root {
     border: 1px solid var(--color-mm-text);
 }
 
-/* asdasd */
+button {
+    user-select: none;
+}

@@ -16,7 +16,7 @@ function Restrictions({cleanData}: inputPartProps) {
 
     return (
         <div className="flex flex-col gap-10 text-mm-text items-center">
-            <h1 className="text-2xl ">Do you have any dietary restrictions?</h1>
+            <h1 className="lg:text-2xl ">Do you have any dietary restrictions?</h1>
             <form onSubmit={e => e.preventDefault()} action="" className="flex flex-col gap-5">
                 <label className="flex items-center gap-5"><input className="bg-mm-text border-b-[1px] border-mm-text p-2" onChange={e => handleRestrictionChange(e, "lactoseFree")} defaultChecked={questionnaire.restrictions.lactoseFree} type="checkbox" /> Lactose-Free Only</label>
 

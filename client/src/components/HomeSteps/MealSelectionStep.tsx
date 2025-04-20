@@ -100,11 +100,11 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
         handleNextPage()
     }
 
-    if (loading) return <div className="text-center w-full">
+    if (loading) return <div className="text-center w-full mt-10">
         <span>Loading your suggestions...</span>
     </div>
 
-    if (error || currentMealIndex >= mealData.length) return <div className="w-full flex flex-col items-center gap-5">
+    if (error || currentMealIndex >= mealData.length) return <div className="w-full flex flex-col items-center gap-5 mt-10">
         <p>No meal data available! </p>
         <button onClick={handleGetResults} disabled={!isReadyToProcessResult(acceptedMeals)} className="
                     disabled:cursor-auto cursor-pointer
@@ -122,7 +122,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
     </div>
 
     return (
-        <div className="flex flex-col gap-10 w-full px-5 xl:items-start items-center">
+        <div className="flex flex-col gap-10 w-full px-5 xl:items-start items-center mt-10">
             <MealCard
                 mealData={mealData[currentMealIndex]}
                 handleAccept={handleAccept}

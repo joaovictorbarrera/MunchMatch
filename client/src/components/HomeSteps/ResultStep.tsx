@@ -68,12 +68,12 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
         }
     }, [])
 
-    if (loading) return <div className="text-center w-full">Loading...</div>
+    if (loading) return <div className="text-center w-full mt-10">Loading...</div>
 
-    if (!result) return <div className="text-center w-full">Failed to get result</div>
+    if (!result) return <div className="text-center w-full mt-10">Failed to get result</div>
 
     return (
-        <div className="flex flex-col mb-20 p-5 items-start">
+        <div className="flex flex-col mb-20 p-5 items-start mt-5">
             {resultId == null && <button className="
             text-mm-text bg-mm-primary py-2 px-5 rounded-lg
             w-fit cursor-pointer hover:brightness-90 flex items-center gap-2"
@@ -196,7 +196,7 @@ function ResultButtons({resultId}: {resultId: number}) {
     }
 
     return (
-        <div className="flex">
+        <div className="flex flex-wrap">
             <button onClick={clearAndStartOver} type="button"
             className="cursor-pointer bg-mm-secondary text-mm-text py-2 px-4 hover:brightness-90 flex gap-1 items-center">
                 <MdOutlineRestartAlt />
@@ -221,7 +221,7 @@ function Total({fullNutrition}: {fullNutrition: {calories: number, fat: number, 
     return (
         <div className="bg-mm-text text-mm-bg  rounded-xl p-5 flex flex-col text-lg gap-2">
             <strong className="underline">{fullNutrition.calories} Calories Total</strong>
-            <div className="flex gap-3 text-black">
+            <div className="flex gap-3 flex-wrap text-black">
                 <span className="bg-mm-secondary p-2 rounded-xl">Protein: {fullNutrition.protein}g</span>
                 <span className="bg-mm-secondary p-2 rounded-xl">Carbs: {fullNutrition.carbs}g</span>
                 <span className="bg-mm-secondary p-2 rounded-xl">Fat: {fullNutrition.fat}g</span>
@@ -239,7 +239,7 @@ function ResultCard({meal, type}: {meal: Meal, type:string}) {
         <div onClick={() => setOpen(true)} className="bg-mm-primary border-mm-text rounded-xl p-5 flex flex-col text-lg gap-2 cursor-pointer hover:brightness-90">
             <span className="bg-red-400 text-white p-2 px-3 rounded-xl w-fit">{type}</span>
             <strong>{meal.title}</strong>
-            <div className="flex gap-3 text-mm-text">
+            <div className="flex flex-wrap gap-3 text-mm-text">
                 <span className="bg-mm-secondary p-2 rounded-xl">Protein: {meal.protein}g</span>
                 <span className="bg-mm-secondary p-2 rounded-xl">Carbs: {meal.carbs}g</span>
                 <span className="bg-mm-secondary p-2 rounded-xl">Fat: {meal.fat}g</span>
