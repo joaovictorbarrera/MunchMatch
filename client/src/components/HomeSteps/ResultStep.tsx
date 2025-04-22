@@ -19,7 +19,7 @@ export interface Result {
     mealPlans: MealPlan[]
 }
 
-function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
+function ResultStep({setPage}: {setPage: React.Dispatch<React.SetStateAction<number>>}) {
     const {resultId} = useContext(ResultIdContext);
 
     const {questionnaire,} = useContext(QuestionnaireContext)
@@ -77,7 +77,7 @@ function ResultStep({handlePreviousPage}: {handlePreviousPage: () => void}) {
             {resultId == null && <button className="
             text-mm-text bg-mm-primary py-2 px-5 rounded-lg
             w-fit cursor-pointer hover:brightness-90 flex items-center gap-2"
-            onClick={handlePreviousPage}>
+            onClick={() => setPage(2)}>
                 <MdOutlineArrowBack /> Back to Meal Selection
             </button>}
             <h1 className="text-4xl text-mm-text my-10">Meal Plans</h1>

@@ -21,7 +21,9 @@ function MealCard({mealData, handleAccept, handleReject, handleGetResults}: Meal
 
     return (
         <div className="flex flex-col xl:flex-row xl:gap-10 gap-4 items-center w-fit xl:px-0 px-5">
-            <img className="bg-black w-[400px] aspect-square object-cover" src={mealData.image} alt="" />
+            <div className="px-10 xl:px-0">
+                <img className="bg-black w-[400px] aspect-square object-cover" src={mealData.image} alt="" />
+            </div>
 
             <div className="xl:hidden flex gap-5 items-baseline">
                 <button onClick={handleReject} className="flex gap-5 items-center text-gray-800 text-2xl cursor-pointer hover:brightness-90">

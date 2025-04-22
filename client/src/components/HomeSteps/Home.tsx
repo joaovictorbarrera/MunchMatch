@@ -9,25 +9,11 @@ function Home({page, setPage}: {page:number, setPage: React.Dispatch<React.SetSt
     const [questionnaireStep, setQuestionnaireStep] = useState<number>(0);
     const {resultId} = useContext(ResultIdContext);
 
-    function handlePreviousPage() {
-        setPage(state => {
-            if (state == 1) return state
-            return state - 1
-        })
-    }
-
-    function handleNextPage() {
-        setPage(state => {
-        if (state == 3) return state
-        return state + 1
-        })
-    }
-
     const pageComponents = new Map(
         [
-            [1, <QuestionnaireStep step={questionnaireStep} setStep={setQuestionnaireStep} handleNextPage={handleNextPage} />],
-            [2, <MealSelectionStep handleNextPage={handleNextPage} handlePreviousPage={handlePreviousPage} />],
-            [3, <ResultStep handlePreviousPage={handlePreviousPage} />]
+            [1, <QuestionnaireStep step={questionnaireStep} setStep={setQuestionnaireStep} setPage={setPage} />],
+            [2, <MealSelectionStep setPage={setPage} />],
+            [3, <ResultStep setPage={setPage} />]
         ]
       )
 

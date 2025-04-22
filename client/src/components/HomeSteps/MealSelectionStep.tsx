@@ -26,7 +26,7 @@ export interface Meal {
 
 const MIN_MEALS_TO_PROGRESS = 30
 
-function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage: () => void, handlePreviousPage: () => void}) {
+function MealSelectionStep({setPage}: {setPage: React.Dispatch<React.SetStateAction<number>>}) {
 
     const {questionnaire,} = useContext(QuestionnaireContext)
     const {mealData, setMealData, currentMealIndex, setCurrentMealIndex, acceptedMeals, setAcceptedMeals, offset, setOffset} = useContext(MealDataContext)
@@ -97,7 +97,7 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
     }
 
     function handleGetResults() {
-        handleNextPage()
+        setPage(3)
     }
 
     if (loading) return <div className="text-center w-full mt-10">
@@ -118,11 +118,11 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
                         <MdOutlineKeyboardDoubleArrowRight   />
                     </IconContext.Provider>
                 </button>
-        <button className="text-mm-text bg-mm-primary py-2 px-5 rounded-lg w-fit cursor-pointer hover:brightness-90 flex items-center gap-2" onClick={handlePreviousPage}><MdOutlineArrowBack  /> Back to Questionnaire</button>
+        <button className="text-mm-text bg-mm-primary py-2 px-5 rounded-lg w-fit cursor-pointer hover:brightness-90 flex items-center gap-2" onClick={() => setPage(1)}><MdOutlineArrowBack  /> Back to Questionnaire</button>
     </div>
 
     return (
-        <div className="flex flex-col gap-10 w-full px-5 xl:items-start items-center mt-10">
+        <div className="flex flex-col gap-10 w-full  xl:items-start items-center mt-10">
             <MealCard
                 mealData={mealData[currentMealIndex]}
                 handleAccept={handleAccept}
@@ -176,7 +176,9 @@ function MealSelectionStep({handleNextPage, handlePreviousPage}: {handleNextPage
                 <hr className="border-t-3 border-mm-secondary" style={{width:`${(MIN_MEALS_TO_PROGRESS-acceptedMeals.length)*(100.0/MIN_MEALS_TO_PROGRESS)}%`}}/>
             </div>
 
-            <button className="text-mm-text bg-mm-primary py-2 px-5 rounded-lg w-fit cursor-pointer hover:brightness-90 flex items-center gap-2" onClick={handlePreviousPage}><MdOutlineArrowBack  /> Back to Questionnaire</button>
+            <button className="text-mm-text bg-mm-primary py-2 px-5 rounded-lg w-fit cursor-pointer hover:brightness-90 flex items-center gap-2" onClick={() => setPage(1)}>
+                <MdOutlineArrowBack  /> Back to Questionnaire
+            </button>
         </div>
     )
 }

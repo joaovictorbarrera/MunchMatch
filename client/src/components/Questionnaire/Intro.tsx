@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 function IntroCard({title, description}: {title:string, description:string}) {
     return (
         <li className="flex flex-1 flex-col bg-mm-primary p-5 rounded-2xl text-mm-text text-center gap-3">
@@ -23,6 +25,20 @@ function Intro({handleNext}: {handleNext: () => void}) {
             description: "Plan your weekly meals with an easy-to-use meal plan."
         }
     }
+
+    function handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            handleNext()
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
         <div className="flex flex-col gap-10">

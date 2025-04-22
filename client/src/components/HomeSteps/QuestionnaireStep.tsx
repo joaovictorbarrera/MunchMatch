@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { QuestionnaireContext } from "../../contexts/QuestionnaireContext";
 import Calories from "../Questionnaire/Calories";
 import Intro from "../Questionnaire/Intro";
@@ -11,7 +11,7 @@ export interface inputPartProps {
     cleanData: () => void
 }
 
-function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setStep: React.Dispatch<React.SetStateAction<number>>, handleNextPage: () => void}) {
+function QuestionnaireStep({step, setStep, setPage}: {step: number, setStep: React.Dispatch<React.SetStateAction<number>>, setPage: React.Dispatch<React.SetStateAction<number>>}) {
     const MAX_STEPS = 4
     const {setMealData, setCurrentMealIndex, setAcceptedMeals, setOffset} = useContext(MealDataContext)
     const {questionnaire} = useContext(QuestionnaireContext)
@@ -40,10 +40,11 @@ function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setSt
     function handleNext() {
         if (!isQuestionnaireValid()) return
 
-        if(step === 4) return handleNextPage()
-
         setStep(step => {
-            if (step == MAX_STEPS) return step
+            if (step >= MAX_STEPS) {
+                setPage(2) // THIS FIRES TWICE AND THATSA BAD
+                return step
+            }
             return step + 1
         })
     }
@@ -64,8 +65,8 @@ function QuestionnaireStep({step, setStep, handleNextPage}: {step: number, setSt
     ])
 
     return (
-        <div className="w-full p-5 py-10 border-b-2 flex flex-col gap-30 border-mm-text">
-            <div className="flex items-center justify-center">
+        <div className="w-full p-5 py-10 border-b-2 flex flex-col gap-15 border-mm-text">
+            <div className="flex items-center justify-center min-h-60">
                 {stepComponents.get(step)}
             </div>
             {step > 0 &&
@@ -87,7 +88,20 @@ interface NavigationProps {
 }
 
 function Navigation({step, handleBack, handleNext}: NavigationProps) {
-    const {questionnaire,} = useContext(QuestionnaireContext)
+    const {questionnaire} = useContext(QuestionnaireContext)
+
+    function handleKeyDown (event: KeyboardEvent)  {
+        console.log(questionnaire.calories)
+        if (event.key === 'Enter' && questionnaire.calories >= 500) handleNext()
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [questionnaire.calories]);
 
     return (
     <div className="inline-flex">
@@ -96,7 +110,7 @@ function Navigation({step, handleBack, handleNext}: NavigationProps) {
             Back
         </button> :
         null}
-        <button onClick={handleNext} disabled={questionnaire.calories == -1} className="cursor-pointer bg-mm-primary hover:brightness-90 text-mm-text border-[1px] border-mm-text py-2 px-10 disabled:border-0 disabled:text-gray-400 disabled:bg-gray-300 disabled:hover:bg-auto disabled:cursor-auto">
+        <button onClick={handleNext} disabled={questionnaire.calories < 500} className="cursor-pointer bg-mm-primary hover:brightness-90 text-mm-text border-[1px] border-mm-text py-2 px-10 disabled:border-0 disabled:text-gray-400 disabled:bg-gray-300 disabled:hover:bg-auto disabled:cursor-auto">
             Next
         </button>
     </div>
