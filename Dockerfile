@@ -1,32 +1,22 @@
-# Stage 1: Build
-FROM eclipse-temurin:17-jdk AS build
-
-# Install Node.js 20 for the React client build
-RUN apt-get update && apt-get install -y curl && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY . .
-
-# Build the React client (output goes to server/src/main/resources/static per vite.config.ts)
+# Build React client
+FROM node:20-bookworm-slim AS client-build
 WORKDIR /app/client
+COPY client/ ./
 RUN npm install
 RUN npm run build
 
-# Build the Spring Boot server JAR (includes client static files)
-WORKDIR /app/server
-RUN chmod +x gradlew
-RUN ./gradlew build -x test
-
-# Stage 2: Runtime
-FROM eclipse-temurin:17-jre
-
+# Build Spring Boot server
+FROM eclipse-temurin:17-jdk AS server-build
 WORKDIR /app
-COPY --from=build /app/server/build/libs/MunchMatch-0.0.1-SNAPSHOT.jar app.jar
+COPY server/ ./server/
+COPY --from=client-build /app/server/src/main/resources/static/ ./server/src/main/resources/static/
+WORKDIR /app/server
+RUN chmod +x gradlew && ./gradlew build -x test
 
+# Run the application
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=server-build /app/server/build/libs/MunchMatch-0.0.1-SNAPSHOT.jar app.jar
 ENV PORT=8080
-EXPOSE $PORT
-
-CMD ["java", "-jar", "app.jar", "--server.port=${PORT}"]
+EXPOSE 8080
+CMD ["sh", "-c", "exec java -jar app.jar --server.port=${PORT}"]
